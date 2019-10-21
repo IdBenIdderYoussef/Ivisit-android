@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="1dp"
+    app:contentPadding="2dp"
+    app:cardBackgroundColor="@color/WhiteColor">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/user_comment_icon"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginEnd="5dp"
+            android:layout_marginRight="5dp"
+            android:src="@drawable/account_profile_picture"/>
+
+        <TextView
+            android:id="@+id/user_name_comment"
+            android:layout_toRightOf="@id/user_comment_icon"
+            android:text="Youssef Id Ben Idder"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            />
+
+        <TextView
+            android:id="@+id/date_creation_comment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/user_name_comment"
+            android:layout_toRightOf="@+id/user_comment_icon"
+            android:text="20 may,2019" />
+
+        <TextView
+            android:id="@+id/comment_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/date_creation_comment"
+            android:layout_toEndOf="@id/user_comment_icon"
+            android:text="Cette place est incroyable !!"/>
+
+
+    </RelativeLayout>
+
+
+
+</androidx.cardview.widget.CardView>

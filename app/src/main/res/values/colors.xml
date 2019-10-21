@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#fadf00</color>
+    <color name="colorPrimaryDark">#f7c002</color>
+    <color name="colorAccent">#D81B60</color>
+    <color name="WhiteColor">#FFFFFF</color>
+
+
+    <color name="likeBtnUnused">#000000</color>
+    <color name="LikeBtnUsed">#d22e4d</color>
+
+
+</resources>

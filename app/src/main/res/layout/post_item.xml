@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:cardCornerRadius="3dp"
+    app:cardElevation="3dp"
+    app:cardUseCompatPadding="true"
+    app:contentPadding="5dp"
+    app:cardBackgroundColor="@color/WhiteColor">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/user_picture_post_detail"
+                android:scaleType="centerCrop"
+                android:src="@drawable/account_profile_picture"
+                android:layout_width="50dp"
+                android:layout_height="50dp" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_weight="1">
+                <TextView
+                    android:id="@+id/user_full_name_post_detail"
+                    android:text="Youssef Id Ben Idder"
+                    android:textSize="20sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+                <TextView
+                    android:id="@+id/date_creation_post_detail"
+                    android:text="20 may 2019"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+            </LinearLayout>
+
+            <ImageButton
+                android:id="@+id/moreBtn_post_detail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:src="@drawable/ic_more"/>
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/title_post_detail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:text="Place jemaa el fna Marrakech"/>
+        <TextView
+            android:id="@+id/description_post_detail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:text="un peu trop de touristes et de vendeurs à la sauvette... ne faites PAS de tatouages au hénné : il est souvent coupé à l'eau et lorsque vous passerez le sois-disant tatouage sous l'eau, tout ou presque disparaitra !"/>
+        <ImageView
+            android:id="@+id/image_post_detail"
+            android:layout_width="match_parent"
+            android:layout_height="250dp"
+            android:background="@color/WhiteColor"
+            android:src="@drawable/jamee_elafana"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#F5F0F0"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            >
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="0 Likes"
+                android:textAllCaps="false"
+                android:background="@null"
+                android:drawableLeft="@drawable/ic_like"
+                android:drawablePadding="5dp"
+                android:padding="5dp"/>
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="0 Comments"
+                android:textAllCaps="false"
+                android:background="@null"
+                android:drawableLeft="@drawable/ic_comment"
+                android:drawablePadding="5dp"
+                android:padding="5dp"/>
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>
