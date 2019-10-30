@@ -2,17 +2,21 @@ package ensa.mobile.ivisitmobile.beta.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.util.List;
 
 import ensa.mobile.ivisitmobile.beta.R;
@@ -39,11 +43,12 @@ public class PostRecyclerAdapter extends RecyclerView.Adapter<PostRecyclerAdapte
         return new ViewHolder(view);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
 
-        String description = postList.get(position).getDescription();
-        holder.setDescriptionText(description);
+        Post post = postList.get(position);
+        holder.setPostInfos(post);
 
         holder.postImage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -65,8 +70,12 @@ public class PostRecyclerAdapter extends RecyclerView.Adapter<PostRecyclerAdapte
     public class ViewHolder extends RecyclerView.ViewHolder{
 
         private View view;
+        private TextView userFullnameTextView;
+        private TextView dateCreationTextView;
         private TextView descriptionTextView;
+        private TextView titleTextView;
         private ImageView postImage;
+        private Button commentsButton;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -74,9 +83,26 @@ public class PostRecyclerAdapter extends RecyclerView.Adapter<PostRecyclerAdapte
             postImage = itemView.findViewById(R.id.image_post_detail);
         }
 
-        public void setDescriptionText(String descriptionText){
+        @RequiresApi(api = Build.VERSION_CODES.O)
+        public void setPostInfos(Post post){
+            userFullnameTextView = view.findViewById(R.id.user_full_name_post_detail);
+            dateCreationTextView = view.findViewById(R.id.date_creation_post_detail);
             descriptionTextView = view.findViewById(R.id.description_post_detail);
-            descriptionTextView.setText(descriptionText);
+            titleTextView = view.findViewById(R.id.title_post_detail);
+            commentsButton = view.findViewById(R.id.comments_count_btn_post_detail);
+
+            if(post.getAccount() != null){
+                userFullnameTextView.setText(post.getAccount().getUsername());
+            }
+            if(post.getCreatedDate() != null){
+
+                dateCreationTextView.setText(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM).format(LocalDate.parse(post.getCreatedDate())));
+            }
+            commentsButton.setText(post.getComments().size() +" Comments");
+            descriptionTextView.setText(post.getDescription());
+            titleTextView.setText(post.getTitle());
+
+
         }
 
     }

@@ -2,5 +2,6 @@
     <string name="app_name">I visit</string>
     <string name="search_item">search_item</string>
     <string name="account_item">account_item</string>
+    <string name="cancel_item">cancel_item</string>
     <string name="crop_image_menu_crop">SELECT</string>
 </resources>

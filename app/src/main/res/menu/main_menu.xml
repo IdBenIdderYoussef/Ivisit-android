@@ -8,6 +8,7 @@
         android:title="@string/search_item"
         app:showAsAction="always" />
     <item
+        android:id="@+id/profile"
         android:icon="@drawable/ic_account"
         android:title="@string/account_item"
         app:showAsAction="always" />

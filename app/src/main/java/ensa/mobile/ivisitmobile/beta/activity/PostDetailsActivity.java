@@ -1,11 +1,13 @@
 package ensa.mobile.ivisitmobile.beta.activity;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.ProgressDialog;
+import android.os.Build;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
@@ -14,6 +16,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -95,21 +100,23 @@ public class PostDetailsActivity extends AppCompatActivity {
 
         Retrofit retrofit = NetworkClient.getRetrofitClient();
         IvisitAPIs ivisitAPIs = retrofit.create(IvisitAPIs.class);
-        Call<List<Comment>> call = ivisitAPIs.getComments(getIntent().getLongExtra("idPost",1));
+        Call<Post> call = ivisitAPIs.getPost(getIntent().getLongExtra("postID",0));
 
-        call.enqueue(new Callback<List<Comment>>() {
+        call.enqueue(new Callback<Post>() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
-            public void onResponse(Call<List<Comment>> call, Response<List<Comment>> response) {
+            public void onResponse(Call<Post> call, Response<Post> response) {
                 /*This is the success callback. Though the response type is JSON, with Retrofit we get the response in the form of WResponse POJO class
                  */
                 if (response.body() != null) {
                     progressDoalog.dismiss();
-                    renderComments(response.body());
+                    renderPost(response.body());
+                    renderComments(response.body().getComments());
                     System.out.println("Work");
                 }
             }
             @Override
-            public void onFailure(Call<List<Comment>> call, Throwable t) {
+            public void onFailure(Call<Post> call, Throwable t) {
                 /*
                 Error callback
                 */
@@ -122,6 +129,15 @@ public class PostDetailsActivity extends AppCompatActivity {
 
 
 
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private void renderPost(Post post) {
+        usernameTextView.setText(post.getAccount().getUsername());
+        dateCreationTimeTextView.setText(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM).format(LocalDate.parse(post.getCreatedDate())));
+        postTitleTextView.setText(post.getTitle());
+        postDescriptionTextView.setText(post.getDescription());
+        commentBtn.setText(post.getComments().size() + " Comments");
     }
 
     public void renderComments(List<Comment> comments){

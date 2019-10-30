@@ -5,6 +5,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Set;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -40,6 +44,16 @@ public class Post {
     @SerializedName("country")
     @Expose
     private String country;
+    @SerializedName("comments")
+    @Expose
+    private List<Comment> comments;
+
+    @SerializedName("createdBy")
+    @Expose
+    private Account account;
+    @SerializedName("createdDate")
+    @Expose
+    private String createdDate;
 
 
 }

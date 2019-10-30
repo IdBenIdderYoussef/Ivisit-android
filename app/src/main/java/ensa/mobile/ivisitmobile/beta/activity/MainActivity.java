@@ -1,12 +1,18 @@
 package ensa.mobile.ivisitmobile.beta.activity;
 
 import android.app.ProgressDialog;
+import android.content.ClipData;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -37,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
     private PostRecyclerAdapter postRecyclerAdapter;
     private FloatingActionButton addPostBtn;
     ProgressDialog progressDoalog;
+    private ClipData.Item profileItem;
 
 
     @Override
@@ -44,9 +51,13 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        SharedPreferences sharedPref;
+        sharedPref = getSharedPreferences("AndroidHivePref" , Context.MODE_PRIVATE);
+
         mainToolbar = (Toolbar) findViewById(R.id.main_toolbar);
         setSupportActionBar(mainToolbar);
         getSupportActionBar().setTitle("I visit");
+
 
         postList = new ArrayList<>();
         postListView = findViewById(R.id.post_list);
@@ -63,6 +74,8 @@ public class MainActivity extends AppCompatActivity {
 
         Retrofit retrofit = NetworkClient.getRetrofitClient();
         IvisitAPIs ivisitAPIs = retrofit.create(IvisitAPIs.class);
+        /*String access_token = sharedPref.getString("access_token","");*/
+        /*System.out.println("HIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII"+access_token);*/
         Call<List<Post>> call = ivisitAPIs.getAllPost();
 
         call.enqueue(new Callback<List<Post>>() {
@@ -101,10 +114,23 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main_menu , menu);
-
         return true;
     }
 
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        try {
+            switch(item.getItemId()) {
+                case R.id.profile:
+                    Intent compteIntent= new Intent(MainActivity.this , LoginActivity.class);
+                    startActivity(compteIntent);
+                    break;
+            }
+        } catch(Exception e) {
+            Log.i("Sleep Recorder", e.toString());
+        }
+        return true;
+    }
 
     public void addPostBtnClick(View view){
 
@@ -116,9 +142,6 @@ public class MainActivity extends AppCompatActivity {
 
 
     public void loadPosts(){
-
-
-
 
 
     }
