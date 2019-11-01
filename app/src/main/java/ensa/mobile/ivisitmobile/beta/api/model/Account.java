@@ -1,4 +1,4 @@
-package ensa.mobile.ivisitmobile.beta.model;
+package ensa.mobile.ivisitmobile.beta.api.model;
 
 
 import com.fasterxml.jackson.annotation.JsonProperty;

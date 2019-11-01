@@ -1,6 +1,5 @@
 package ensa.mobile.ivisitmobile.beta.activity;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
@@ -12,20 +11,14 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.google.android.gms.common.api.Status;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.libraries.places.api.Places;
-import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.api.net.PlacesClient;
-import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
-import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
-
-import java.util.Arrays;
 
 import ensa.mobile.ivisitmobile.beta.R;
-import ensa.mobile.ivisitmobile.beta.api.IvisitAPIs;
+import ensa.mobile.ivisitmobile.beta.api.interfaces.IvisitAPIs;
 import ensa.mobile.ivisitmobile.beta.api.NetworkClient;
-import ensa.mobile.ivisitmobile.beta.model.Post;
+import ensa.mobile.ivisitmobile.beta.api.interfaces.PostApi;
+import ensa.mobile.ivisitmobile.beta.api.model.Post;
+import ensa.mobile.ivisitmobile.beta.api.services.PostService;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -36,6 +29,7 @@ public class AddPostStep2Activity extends AppCompatActivity {
     private Toolbar addPostToolbar2;
     private EditText addPostTitleEditText;
     private Button addPostBtn;
+    private PostService postService;
 
     private TextWatcher textWatcher = new TextWatcher() {
         @Override
@@ -72,7 +66,7 @@ public class AddPostStep2Activity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_post_step2);
 
-        addPostToolbar2 = (Toolbar) findViewById(R.id.add_toolbar2);
+        addPostToolbar2 =  findViewById(R.id.add_toolbar2);
         setSupportActionBar(addPostToolbar2);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_back);
@@ -80,6 +74,8 @@ public class AddPostStep2Activity extends AppCompatActivity {
 
         addPostTitleEditText = findViewById(R.id.add_post_title_edit_text);
         addPostBtn = findViewById(R.id.add_post_btn);
+
+        postService = new PostService(PostApi.class);
 
         addPostTitleEditText.addTextChangedListener(textWatcher);
 
@@ -113,31 +109,28 @@ public class AddPostStep2Activity extends AppCompatActivity {
 
     public void addPost(View view){
 
-        Retrofit retrofit = NetworkClient.getRetrofitClient();
-        IvisitAPIs ivisitAPIs = retrofit.create(IvisitAPIs.class);
         Post post = Post.builder().description(getIntent().getStringExtra("text_description")).title(addPostTitleEditText.getText().toString()).build();
-        Call<Post> call = ivisitAPIs.addPost(post);
+        Call<Post> call = postService.getApi().create(post);
 
         call.enqueue(new Callback<Post>() {
             @Override
             public void onResponse(Call<Post> call, Response<Post> response) {
-                /*This is the success callback. Though the response type is JSON, with Retrofit we get the response in the form of WResponse POJO class
-                 */
                 if (response.body() != null) {
-                    Toast.makeText(getApplicationContext() , "Post added to Base Données",Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext() , "Post added to DataBase",Toast.LENGTH_LONG).show();
                 }
             }
             @Override
             public void onFailure(Call<Post> call, Throwable t) {
-                /*
-                Error callback
-                */
                 Toast.makeText(getApplicationContext() , "Something wrong happened",Toast.LENGTH_LONG).show();
-
-
             }
         });
 
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return super.onSupportNavigateUp();
     }
 
 }

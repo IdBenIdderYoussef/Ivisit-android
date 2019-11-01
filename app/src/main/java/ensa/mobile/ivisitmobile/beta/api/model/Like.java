@@ -1,5 +1,7 @@
-package ensa.mobile.ivisitmobile.beta.model;
+package ensa.mobile.ivisitmobile.beta.api.model;
 
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -9,20 +11,28 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-
 @Setter
 @Getter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 
-public class Authorization {
+public class Like {
 
-    @SerializedName("user")
-    @Expose
-    private Account user;
 
-    @SerializedName("token")
+    @JsonProperty("post")
     @Expose
-    private String token;
+    private Post post;
+
+    @SerializedName("createdBy")
+    @Expose
+    private Account account;
+    @SerializedName("createdDate")
+    @Expose
+    private String createdDate;
+
+
+
+
+
 }

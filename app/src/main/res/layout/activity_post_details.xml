@@ -5,28 +5,53 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".activity.PostDetailsActivity">
+
+
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <LinearLayout
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/add_comment_layout"
+        >
+
+         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
+             <com.google.android.material.appbar.AppBarLayout
+                 android:id="@+id/appbar"
+                 android:layout_width="match_parent"
+                 android:layout_height="wrap_content"
+                 android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+                 app:layout_constraintStart_toStartOf="parent"
+                 app:layout_constraintTop_toTopOf="parent">
+
+                 <androidx.appcompat.widget.Toolbar
+                     android:id="@+id/post_detail_toolbar"
+                     android:layout_width="match_parent"
+                     android:layout_height="wrap_content"
+                     android:background="@color/colorPrimary"
+                     android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+                     app:layout_constraintEnd_toEndOf="parent"
+                     app:layout_constraintStart_toStartOf="parent"
+                     app:layout_constraintTop_toTopOf="parent">
+
+                 </androidx.appcompat.widget.Toolbar>
+             </com.google.android.material.appbar.AppBarLayout>
+
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                app:cardBackgroundColor="@color/WhiteColor"
                 app:cardCornerRadius="3dp"
                 app:cardElevation="3dp"
                 app:cardUseCompatPadding="true"
-                app:contentPadding="5dp"
-                app:cardBackgroundColor="@color/WhiteColor">
+                app:contentPadding="5dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    >
+                    android:orientation="vertical">
 
                     <LinearLayout
                         android:id="@+id/profile_layout"
@@ -95,23 +120,23 @@
                         android:textColor="#2A2A2A"
                         android:textSize="14sp"
                         android:textStyle="normal" />
+
                     <ImageView
                         android:id="@+id/image_post_detail"
                         android:layout_width="match_parent"
                         android:layout_height="250dp"
                         android:background="@color/WhiteColor"
-                        android:src="@drawable/jamee_elafana"/>
+                        android:src="@drawable/jamee_elafana" />
 
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
-                        android:background="#F5F0F0"/>
+                        android:background="#F5F0F0" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        >
+                        android:orientation="horizontal">
 
                         <Button
                             android:id="@+id/like_count_btn_post_detail"
@@ -147,45 +172,50 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Comments"
+                android:layout_marginLeft="5dp"
                 android:padding="5dp"
-                />
+                android:text="Comments"
+                android:textColor="#2A2A2A"
+                android:textSize="16sp" />
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/comments_recycleciew"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                />
+             <androidx.recyclerview.widget.RecyclerView
+                 android:id="@+id/comments_recycleciew"
+                 android:layout_width="match_parent"
+                 android:layout_height="wrap_content"
+                  />
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 
     <RelativeLayout
+        android:id="@+id/add_comment_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true">
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/border_set"
+        android:padding="3dp">
+
         <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/user_add_comment_icon"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:id="@+id/user_add_comment_icon"
-            android:src="@drawable/account_profile_picture"/>
+            android:src="@drawable/account_profile_picture" />
 
         <EditText
             android:id="@+id/add_comment_content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
             android:layout_margin="1dp"
-            android:layout_toEndOf="@+id/user_add_comment_icon"
+            android:layout_marginRight="1dp"
             android:layout_toStartOf="@+id/send_comment_btn"
-            android:padding="10dp"
+            android:layout_toLeftOf="@+id/send_comment_btn"
+            android:layout_toEndOf="@+id/user_add_comment_icon"
+            android:layout_toRightOf="@+id/user_add_comment_icon"
             android:background="@color/WhiteColor"
             android:hint="Enter comment..."
             android:inputType="textCapSentences|textMultiLine"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="1dp"
-            android:layout_toRightOf="@+id/user_add_comment_icon"
-            android:layout_toLeftOf="@+id/send_comment_btn"
-            />
+            android:padding="10dp" />
 
         <ImageButton
             android:id="@+id/send_comment_btn"
@@ -194,9 +224,9 @@
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:src="@drawable/ic_send_comment"
             android:background="@color/WhiteColor"
-            />
+            android:src="@drawable/ic_send_comment"
+            android:onClick="createComment"/>
 
     </RelativeLayout>
 

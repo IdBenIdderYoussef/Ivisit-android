@@ -1,19 +1,21 @@
 package ensa.mobile.ivisitmobile.beta.security;
 
-public interface Session {
-    boolean isLoggedIn();
 
-    void saveToken(String token);
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-    String getToken();
+@Setter
+@Getter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 
-    void saveEmail(String email);
+public class Session {
 
-    String getEmail();
+    private String username;
+    private String accessToken;
 
-    void savePassword(String password);
-
-    String getPassword();
-
-    void invalidate();
 }

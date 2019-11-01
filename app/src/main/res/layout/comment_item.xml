@@ -4,7 +4,6 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="1dp"
     app:contentPadding="2dp"
     app:cardBackgroundColor="@color/WhiteColor">
 
@@ -22,29 +21,37 @@
 
         <TextView
             android:id="@+id/user_name_comment"
-            android:layout_toRightOf="@id/user_comment_icon"
-            android:text="Youssef Id Ben Idder"
-            android:textSize="16sp"
-            android:textStyle="bold"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            />
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="3dp"
+            android:layout_toRightOf="@id/user_comment_icon"
+            android:text="Youssef Id Ben Idder"
+            android:textColor="#181818"
+            android:textSize="14sp"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/date_creation_comment"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/user_name_comment"
+            android:layout_marginLeft="5dp"
             android:layout_toRightOf="@+id/user_comment_icon"
-            android:text="20 may,2019" />
+            android:text="20 may,2019"
+            android:textColor="#919191"
+            android:textSize="11sp" />
 
         <TextView
             android:id="@+id/comment_content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/date_creation_comment"
+            android:layout_marginTop="5dp"
             android:layout_toEndOf="@id/user_comment_icon"
-            android:text="Cette place est incroyable !!"/>
+            android:text="Cette place est incroyable !!"
+            android:textColor="#2A2A2A"
+            android:textSize="14sp" />
 
 
     </RelativeLayout>

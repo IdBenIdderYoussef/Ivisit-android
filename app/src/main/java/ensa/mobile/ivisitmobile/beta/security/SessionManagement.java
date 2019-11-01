@@ -7,7 +7,7 @@ import android.util.Log;
 
 import java.util.HashMap;
 
-import ensa.mobile.ivisitmobile.beta.model.Login;
+import ensa.mobile.ivisitmobile.beta.api.model.Login;
 
 public class SessionManagement {
 

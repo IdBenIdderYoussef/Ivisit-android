@@ -1,73 +1,86 @@
 package ensa.mobile.ivisitmobile.beta.activity;
 
-import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
+import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import ensa.mobile.ivisitmobile.beta.R;
 import ensa.mobile.ivisitmobile.beta.adapter.CommentRecyclerAdapter;
-import ensa.mobile.ivisitmobile.beta.api.IvisitAPIs;
-import ensa.mobile.ivisitmobile.beta.api.NetworkClient;
-import ensa.mobile.ivisitmobile.beta.model.Comment;
-import ensa.mobile.ivisitmobile.beta.model.Post;
+import ensa.mobile.ivisitmobile.beta.api.interfaces.CommentApi;
+import ensa.mobile.ivisitmobile.beta.api.interfaces.LikeApi;
+import ensa.mobile.ivisitmobile.beta.api.interfaces.PostApi;
+import ensa.mobile.ivisitmobile.beta.api.model.Account;
+import ensa.mobile.ivisitmobile.beta.api.model.Comment;
+import ensa.mobile.ivisitmobile.beta.api.model.Like;
+import ensa.mobile.ivisitmobile.beta.api.model.Post;
+import ensa.mobile.ivisitmobile.beta.api.services.CommentService;
+import ensa.mobile.ivisitmobile.beta.api.services.LikeService;
+import ensa.mobile.ivisitmobile.beta.api.services.PostService;
+import ensa.mobile.ivisitmobile.beta.security.App;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
 
 public class PostDetailsActivity extends AppCompatActivity {
 
 
-    ImageView userPictureView, postImageView;
-    TextView usernameTextView , dateCreationTimeTextView , postTitleTextView , postDescriptionTextView;
-    ImageButton moreBtn;
-    Button likeBtn , commentBtn;
-    LinearLayout profileLayout;
+    private ImageView userPictureView, postImageView;
+    private TextView usernameTextView, dateCreationTimeTextView, postTitleTextView, postDescriptionTextView;
+    private ImageButton moreBtn;
+    private Button likeBtn, commentBtn;
+    private LinearLayout profileLayout;
 
-    EditText commentContentEditText;
-    ImageButton sendBtn;
-    ImageView userCommentImage;
+    private EditText commentContentEditText;
+    private ImageButton sendBtn;
+    private ImageView userCommentImage;
 
-    CommentRecyclerAdapter commentRecyclerAdapter;
-    RecyclerView commentListView;
-    List<Comment> commentList;
+    private CommentRecyclerAdapter commentRecyclerAdapter;
+    private RecyclerView commentListView;
+    private List<Comment> commentList;
 
-    ProgressDialog progressDoalog ;
+    private ProgressDialog progressDoalog;
+    private Toolbar postDetailToolbar;
 
-
+    private Post post;
+    private PostService postService;
+    private CommentService commentService;
+    private LikeService likeService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post_details);
 
+        postService = new PostService(PostApi.class);
+        commentService = new CommentService(CommentApi.class);
+        likeService = new LikeService(LikeApi.class);
 
-
- //       ActionBar actionBar = getSupportActionBar();
-   //     actionBar.setTitle("Post Detail");
-     //   actionBar.setDisplayShowHomeEnabled(true);
-       // actionBar.setDisplayHomeAsUpEnabled(true);
-
-
+        postDetailToolbar = findViewById(R.id.post_detail_toolbar);
+        setSupportActionBar(postDetailToolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_back);
 
 
         userPictureView = findViewById(R.id.user_picture_post_detail);
@@ -90,7 +103,7 @@ public class PostDetailsActivity extends AppCompatActivity {
 
         commentList = new ArrayList<>();
         commentListView = findViewById(R.id.comments_recycleciew);
-        commentRecyclerAdapter = new CommentRecyclerAdapter(this , commentList);
+        commentRecyclerAdapter = new CommentRecyclerAdapter(this, commentList);
         commentListView.setLayoutManager(new LinearLayoutManager(this));
         commentListView.setAdapter(commentRecyclerAdapter);
 
@@ -98,53 +111,89 @@ public class PostDetailsActivity extends AppCompatActivity {
         progressDoalog.setMessage("Loading....");
         progressDoalog.show();
 
-        Retrofit retrofit = NetworkClient.getRetrofitClient();
-        IvisitAPIs ivisitAPIs = retrofit.create(IvisitAPIs.class);
-        Call<Post> call = ivisitAPIs.getPost(getIntent().getLongExtra("postID",0));
+        getPost();
+
+        likeBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (post.getIsLiked()) {
+
+                    post.setIsLiked(false);
+                    deleteLike(App.getSession().getUsername(), post.getId());
+                    likeBtn.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_like, 0, 0, 0);
+                    likeBtn.setText(post.getLikes().size() + " Likes");
+
+                } else {
+
+                    post.setIsLiked(true);
+                    createLike(post.getId());
+                    likeBtn.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_like_pressed, 0, 0, 0);
+                    likeBtn.setText(post.getLikes().size() + 1 + " Likes");
+                }
+            }
+
+        });
+
+    }
+
+
+    public void getPost() {
+
+        Call<Post> call = postService.getApi().get(getIntent().getLongExtra("postID", 0));
 
         call.enqueue(new Callback<Post>() {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onResponse(Call<Post> call, Response<Post> response) {
-                /*This is the success callback. Though the response type is JSON, with Retrofit we get the response in the form of WResponse POJO class
-                 */
                 if (response.body() != null) {
                     progressDoalog.dismiss();
-                    renderPost(response.body());
-                    renderComments(response.body().getComments());
-                    System.out.println("Work");
+                    post = response.body();
+                    post.setIsLiked(isLiked(post));
+                    renderPost(post);
+                    renderComments(post.getComments());
                 }
             }
+
             @Override
             public void onFailure(Call<Post> call, Throwable t) {
-                /*
-                Error callback
-                */
-                System.out.println("Not Working : "+t.getMessage());
+
+                System.err.println("Error message : " + t.getMessage());
                 progressDoalog.dismiss();
+
+            }
+        });
+
+    }
+
+    public void createComment(View view) {
+
+        final Comment comment = Comment.builder().content(commentContentEditText.getText().toString()).build();
+        Call<Void> call = commentService.getApi().create(comment, post.getId());
+
+        call.enqueue(new Callback<Void>() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+
+                Toast.makeText(getApplicationContext(), "Comment added to DataBase", Toast.LENGTH_LONG).show();
+                comment.setAccount(Account.builder().username(App.getSession().getUsername()).build());
+                comment.setCreatedDate(LocalDate.now().toString());
+                commentList.add(comment);
+                commentRecyclerAdapter.notifyDataSetChanged();
+                post.getComments().add(comment);
+                commentBtn.setText(post.getComments().size() + " Comments");
+
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                System.out.println(t.getMessage());
+                Toast.makeText(getApplicationContext(), "Something wrong happened", Toast.LENGTH_LONG).show();
 
 
             }
         });
 
-
-
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    private void renderPost(Post post) {
-        usernameTextView.setText(post.getAccount().getUsername());
-        dateCreationTimeTextView.setText(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM).format(LocalDate.parse(post.getCreatedDate())));
-        postTitleTextView.setText(post.getTitle());
-        postDescriptionTextView.setText(post.getDescription());
-        commentBtn.setText(post.getComments().size() + " Comments");
-    }
-
-    public void renderComments(List<Comment> comments){
-        for (Comment comment : comments){
-            commentList.add(comment);
-            commentRecyclerAdapter.notifyDataSetChanged();
-        }
     }
 
 
@@ -154,6 +203,83 @@ public class PostDetailsActivity extends AppCompatActivity {
         return super.onSupportNavigateUp();
     }
 
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private void renderPost(Post post) {
+
+        if (post.getAccount() != null) {
+            usernameTextView.setText(post.getAccount().getUsername());
+        }
+
+        dateCreationTimeTextView.setText(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM).format(LocalDate.parse(post.getCreatedDate())));
+        postTitleTextView.setText(post.getTitle());
+        getSupportActionBar().setTitle(post.getTitle());
+        postDescriptionTextView.setText(post.getDescription());
+        commentBtn.setText(post.getComments().size() + " Comments");
+        likeBtn.setText(post.getLikes().size() + " Likes");
+        if (post.getIsLiked()) {
+            likeBtn.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_like_pressed, 0, 0, 0);
+        }
+    }
+
+    public void renderComments(List<Comment> comments) {
+        for (Comment comment : comments) {
+            commentList.add(comment);
+            commentRecyclerAdapter.notifyDataSetChanged();
+        }
+    }
+
+    public boolean isLiked(Post post) {
+        for (Like like : post.getLikes()) {
+            if (like.getAccount().getUsername().equals(App.getSession().getUsername()))
+                return true;
+        }
+        return false;
+    }
+
+
+    public void createLike(Long postId) {
+
+        Call<Like> call = likeService.getApi().create(new Like(), postId);
+
+        call.enqueue(new Callback<Like>() {
+            @Override
+            public void onResponse(Call<Like> call, Response<Like> response) {
+                if (response.body() != null) {
+                    Toast.makeText(getApplicationContext(), "Like added to DataBase", Toast.LENGTH_LONG).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Like> call, Throwable t) {
+                System.out.println(t.getMessage());
+                Toast.makeText(getApplicationContext(), "Something wrong happened", Toast.LENGTH_LONG).show();
+            }
+        });
+
+
+    }
+
+    public void deleteLike(String username, Long postId) {
+
+        Call<Void> call = likeService.getApi().delete(username, postId);
+
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.body() != null) {
+                    Toast.makeText(getApplicationContext(), "Like deleted from DataBase", Toast.LENGTH_LONG).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                System.out.println(t.getMessage());
+                Toast.makeText(getApplicationContext(), "Something wrong happened", Toast.LENGTH_LONG).show();
+            }
+        });
+
+    }
 
 
 }

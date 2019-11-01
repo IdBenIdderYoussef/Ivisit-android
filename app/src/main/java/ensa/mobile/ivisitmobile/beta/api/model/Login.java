@@ -1,4 +1,4 @@
-package ensa.mobile.ivisitmobile.beta.model;
+package ensa.mobile.ivisitmobile.beta.api.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

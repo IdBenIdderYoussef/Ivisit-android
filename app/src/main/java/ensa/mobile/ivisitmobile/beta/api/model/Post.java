@@ -1,13 +1,10 @@
-package ensa.mobile.ivisitmobile.beta.model;
+package ensa.mobile.ivisitmobile.beta.api.model;
 
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import java.time.LocalDate;
 import java.util.List;
-import java.util.Set;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -21,6 +18,8 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Post {
+
+    private Boolean isLiked;
 
     @SerializedName("id")
     @Expose
@@ -36,7 +35,7 @@ public class Post {
     private String picture;
     @SerializedName("likes")
     @Expose
-    private int likes;
+    private List<Like> likes;
 
     @SerializedName("city")
     @Expose

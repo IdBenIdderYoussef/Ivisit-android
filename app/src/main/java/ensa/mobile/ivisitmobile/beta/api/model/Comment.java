@@ -1,7 +1,9 @@
-package ensa.mobile.ivisitmobile.beta.model;
+package ensa.mobile.ivisitmobile.beta.api.model;
 
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,11 +20,23 @@ import lombok.Setter;
 public class Comment {
 
     @JsonProperty("content")
+    @Expose
     private String content;
-    @JsonProperty("dateCreation")
-    private String dateCreation;
     @JsonProperty("username")
+    @Expose
     private String username;
+    @JsonProperty("post")
+    @Expose
+    private Post post;
+
+    @SerializedName("createdBy")
+    @Expose
+    private Account account;
+    @SerializedName("createdDate")
+    @Expose
+    private String createdDate;
+
+
 
 
 

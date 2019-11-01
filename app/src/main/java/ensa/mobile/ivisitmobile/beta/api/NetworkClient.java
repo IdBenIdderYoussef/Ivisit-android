@@ -1,16 +1,17 @@
 package ensa.mobile.ivisitmobile.beta.api;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 
 import java.io.IOException;
 
 import ensa.mobile.ivisitmobile.beta.security.App;
+import ensa.mobile.ivisitmobile.beta.security.Session;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class NetworkClient {
@@ -36,12 +37,9 @@ public class NetworkClient {
         @Override
         public Response intercept(Chain chain) throws IOException {
 
-            SharedPreferences sharedPref;
-            sharedPref = App.getContext().getSharedPreferences("AndroidHivePref" ,Context.MODE_PRIVATE);
-            String token = sharedPref.getString("access_token","");
-            System.out.println("HIIIIIIIIIIIIIIIIi"+token);
+            Session session = App.getSession();
             Request newRequest  = chain.request().newBuilder()
-                    .addHeader("Authorization", "Bearer " + token)
+                    .addHeader("Authorization", "Bearer " + session.getAccessToken())
                     .build();
             return chain.proceed(newRequest);
         }
@@ -57,6 +55,7 @@ public class NetworkClient {
                     .client(client)
                     //This is the only mandatory call on Builder object.
                     .addConverterFactory(GsonConverterFactory.create()) // Convertor library used to convert response into POJO
+                    .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                     .build();
         }
         return retrofit;

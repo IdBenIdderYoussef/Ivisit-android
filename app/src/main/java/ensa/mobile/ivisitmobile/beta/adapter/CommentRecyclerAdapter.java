@@ -1,6 +1,7 @@
 package ensa.mobile.ivisitmobile.beta.adapter;
 
 import android.content.Context;
+import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,12 +9,16 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.util.List;
 
 import ensa.mobile.ivisitmobile.beta.R;
-import ensa.mobile.ivisitmobile.beta.model.Comment;
+import ensa.mobile.ivisitmobile.beta.api.model.Comment;
 
 public class CommentRecyclerAdapter extends RecyclerView.Adapter<CommentRecyclerAdapter.ViewHolder> {
 
@@ -33,11 +38,12 @@ public class CommentRecyclerAdapter extends RecyclerView.Adapter<CommentRecycler
         return new ViewHolder(view);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
-        String content = commentList.get(position).getContent();
-        holder.setCommentContentText(content);
+        Comment comment = commentList.get(position);
+        holder.setCommentInfos(comment);
 
     }
 
@@ -65,9 +71,14 @@ public class CommentRecyclerAdapter extends RecyclerView.Adapter<CommentRecycler
 
         }
 
-        public void setCommentContentText(String contentTextText){
+        @RequiresApi(api = Build.VERSION_CODES.O)
+        public void setCommentInfos(Comment comment){
+            if(comment.getAccount() != null){
+                usernameComment.setText(comment.getAccount().getUsername());
+            }
+            dateCreationComment.setText(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM).format(LocalDate.parse(comment.getCreatedDate())));
             commentContent = view.findViewById(R.id.comment_content);
-            commentContent.setText(contentTextText);
+            commentContent.setText(comment.getContent());
         }
 
     }
