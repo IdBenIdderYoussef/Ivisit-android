@@ -87,7 +87,7 @@ public class AddPostActivity extends AppCompatActivity {
     public void toNextSteep(View view) {
 
         Intent nextSteepIntent = new Intent(AddPostActivity.this, AddPostStep2Activity.class);
-        nextSteepIntent.putExtra("description", descriptionEditText.getText().toString());
+        nextSteepIntent.putExtra("text_description", descriptionEditText.getText().toString());
         nextSteepIntent.putExtra("image_uri", imageUri.toString());
         startActivity(nextSteepIntent);
     }

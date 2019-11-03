@@ -41,9 +41,9 @@ public class MainActivity extends AppCompatActivity {
 
 
     private Toolbar mainToolbar;
-    private RecyclerView postListView;
+    public static RecyclerView postListView;
     private List<Post> postList;
-    private PostRecyclerAdapter postRecyclerAdapter;
+    public static PostRecyclerAdapter postRecyclerAdapter;
     private FloatingActionButton addPostBtn;
     ProgressDialog progressDialog;
     private ClipData.Item profileItem;

@@ -9,6 +9,7 @@ import ensa.mobile.ivisitmobile.beta.api.model.Post;
 import io.reactivex.Single;
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
@@ -25,6 +26,9 @@ public interface PostApi {
 
     @GET(urlPrefix+"{id}")
     Call<Post> get(@Path("id") Long id);
+
+    @DELETE(urlPrefix+"{id}")
+    Call<Void> delete(@Path("id") Long id);
 
 
 }

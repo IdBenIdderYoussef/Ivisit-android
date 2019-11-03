@@ -20,6 +20,10 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
+import com.bumptech.glide.request.RequestOptions;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
@@ -175,7 +179,7 @@ public class PostDetailsActivity extends AppCompatActivity {
 
     }
 
-    public void createComment(View view) {
+    public void createComment(final View view) {
 
         final Comment comment = Comment.builder().content(commentContentEditText.getText().toString()).build();
         Call<Void> call = commentService.getApi().create(comment, post.getId());
@@ -192,6 +196,7 @@ public class PostDetailsActivity extends AppCompatActivity {
                 commentRecyclerAdapter.notifyDataSetChanged();
                 post.getComments().add(comment);
                 commentBtn.setText(post.getComments().size() + " Comments");
+
 
             }
 
@@ -230,6 +235,13 @@ public class PostDetailsActivity extends AppCompatActivity {
         if (post.getIsLiked()) {
             likeBtn.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_like_pressed, 0, 0, 0);
         }
+        RequestOptions reqOpt = RequestOptions
+                .fitCenterTransform()
+                .transform(new RoundedCorners(5))
+                .override(postImageView.getWidth(), postImageView.getHeight())
+                .centerCrop(); // Overrides size of downloaded image and converts it's bitmaps to your desired image size;
+
+        Glide.with(this).load(post.getPicture()).apply(reqOpt).into(postImageView);
     }
 
     public void renderComments(List<Comment> comments) {
