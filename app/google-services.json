@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "61715868620",
+    "firebase_url": "https://i-visit-88804.firebaseio.com",
+    "project_id": "i-visit-88804",
+    "storage_bucket": "i-visit-88804.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:61715868620:android:51df790e2c79e7b4afcb69",
+        "android_client_info": {
+          "package_name": "ensa.mobile.ivisitmobile.beta"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "61715868620-sdhneari525s48j5ulk9vvmod11corgr.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "ensa.mobile.ivisitmobile.beta",
+            "certificate_hash": "0526198ebc166ab800c3f71f4e4cc0adcc24cccd"
+          }
+        },
+        {
+          "client_id": "61715868620-f801t8etinn8gphu215rugceg64c5nub.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBtKEiEdrkJ4s3a_Ospv3_NLI-Z-2Rr0N4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "61715868620-f801t8etinn8gphu215rugceg64c5nub.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

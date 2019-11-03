@@ -20,6 +20,8 @@ import lombok.Setter;
 public class Post {
 
     private Boolean isLiked;
+    private Boolean isAlreadyLiked;
+
 
     @SerializedName("id")
     @Expose
@@ -33,6 +35,7 @@ public class Post {
     @SerializedName("picture")
     @Expose
     private String picture;
+
     @SerializedName("likes")
     @Expose
     private List<Like> likes;

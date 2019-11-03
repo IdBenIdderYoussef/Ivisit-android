@@ -76,7 +76,7 @@ public class CommentRecyclerAdapter extends RecyclerView.Adapter<CommentRecycler
             if(comment.getAccount() != null){
                 usernameComment.setText(comment.getAccount().getUsername());
             }
-            dateCreationComment.setText(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM).format(LocalDate.parse(comment.getCreatedDate())));
+//            dateCreationComment.setText(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM).format(LocalDate.parse(comment.getCreatedDate())));
             commentContent = view.findViewById(R.id.comment_content);
             commentContent.setText(comment.getContent());
         }

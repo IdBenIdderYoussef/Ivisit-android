@@ -79,12 +79,14 @@
             android:textColor="#2A2A2A"
             android:textSize="14sp"
             android:textStyle="normal" />
+
         <ImageView
             android:id="@+id/image_post_detail"
             android:layout_width="match_parent"
             android:layout_height="250dp"
+            android:layout_marginVertical="5dp"
             android:background="@color/WhiteColor"
-            android:src="@drawable/jamee_elafana"/>
+            android:src="@drawable/jamee_elafana" />
 
         <View
             android:layout_width="match_parent"

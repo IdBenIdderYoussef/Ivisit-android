@@ -3,7 +3,6 @@ package ensa.mobile.ivisitmobile.beta.activity;
 import android.app.ProgressDialog;
 import android.content.ClipData;
 import android.content.Intent;
-import android.database.Observable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -33,6 +32,9 @@ import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -43,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
     private List<Post> postList;
     private PostRecyclerAdapter postRecyclerAdapter;
     private FloatingActionButton addPostBtn;
-    ProgressDialog progressDoalog;
+    ProgressDialog progressDialog;
     private ClipData.Item profileItem;
     private PostService postService;
 
@@ -65,9 +67,9 @@ public class MainActivity extends AppCompatActivity {
         postListView.setAdapter(postRecyclerAdapter);
 
         addPostBtn = findViewById(R.id.add_post_btn);
-        progressDoalog = new ProgressDialog(MainActivity.this);
-        progressDoalog.setMessage("Loading....");
-        progressDoalog.show();
+        progressDialog = new ProgressDialog(MainActivity.this);
+        progressDialog.setMessage("Loading....");
+        progressDialog.show();
 
         postService = new PostService(PostApi.class);
 
@@ -78,40 +80,17 @@ public class MainActivity extends AppCompatActivity {
 
     private void renderPosts() {
 
-        Single<List<Post>> postsObservale = postService.getApi().findAll();
-        postsObservale.subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new SingleObserver<List<Post>>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-
-                    }
-
-                    @Override
-                    public void onSuccess(List<Post> posts) {
-
-                        for (Post post : posts) {
-                            progressDoalog.dismiss();
-                            post.setIsLiked(isLiked(post));
-                            postList.add(post);
-                            postRecyclerAdapter.notifyDataSetChanged();
-                        }
-
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-
-                    }
-                });
+        Call<List<Post>> call= postService.getApi().findAll();
 
 
-        /*call.enqueue(new Callback<List<Post>>() {
+        call.enqueue(new Callback<List<Post>>() {
             @Override
             public void onResponse(Call<List<Post>> call, Response<List<Post>> response) {
                 if (response.body() != null) {
                     for (Post post : response.body()) {
-                        progressDoalog.dismiss();
+                        progressDialog.dismiss();
+                        post.setIsLiked(isLiked(post));
+                        post.setIsAlreadyLiked(post.getIsLiked());
                         postList.add(post);
                         postRecyclerAdapter.notifyDataSetChanged();
                     }
@@ -121,10 +100,11 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<List<Post>> call, Throwable t) {
                 System.err.println("Error message : "+t.getMessage());
-                progressDoalog.dismiss();
+                progressDialog.dismiss();
             }
-        });*/
+        });
     }
+
 
     public boolean isLiked(Post post) {
         for (Like like : post.getLikes()) {
@@ -136,10 +116,12 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onRestart() {
-        super.onRestart();
-        postList = new ArrayList<>();
-        postRecyclerAdapter.notifyDataSetChanged();
+        postList.removeAll(postList);
+        postRecyclerAdapter = new PostRecyclerAdapter(this, postList);
+        postListView.setLayoutManager(new LinearLayoutManager(this));
+        postListView.setAdapter(postRecyclerAdapter);
         renderPosts();
+        super.onRestart();
     }
 
     @Override

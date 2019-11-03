@@ -16,6 +16,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
+import com.bumptech.glide.request.RequestOptions;
+import com.squareup.picasso.Picasso;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
@@ -64,7 +70,9 @@ public class PostRecyclerAdapter extends RecyclerView.Adapter<PostRecyclerAdapte
     public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
 
         post = postList.get(position);
-        holder.setPostInfos(post);
+        holder.setPostInfo(post);
+
+
 
         holder.postImage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -81,19 +89,29 @@ public class PostRecyclerAdapter extends RecyclerView.Adapter<PostRecyclerAdapte
         holder.likesButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                System.out.println(postList.get(position).getIsLiked());
                 if (postList.get(position).getIsLiked()) {
 
                     postList.get(position).setIsLiked(false);
                     deleteLike(App.getSession().getUsername(), postList.get(position).getId());
                     holder.likesButton.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_like, 0, 0, 0);
-                    holder.likesButton.setText(postList.get(position).getLikes().size() + " Likes");
+                    if(postList.get(position).getIsAlreadyLiked() == true){
+                        holder.likesButton.setText(postList.get(position).getLikes().size() - 1 +  " Likes");
+                    }else {
+                        holder.likesButton.setText(postList.get(position).getLikes().size()  +  " Likes");
+                    }
 
                 } else {
 
                     postList.get(position).setIsLiked(true);
                     createLike(postList.get(position).getId());
                     holder.likesButton.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_like_pressed, 0, 0, 0);
-                    holder.likesButton.setText(postList.get(position).getLikes().size() + 1 + " Likes");
+                    if(postList.get(position).getIsAlreadyLiked() == true){
+                        holder.likesButton.setText(postList.get(position).getLikes().size()  +  " Likes");
+                    }else {
+                        holder.likesButton.setText(postList.get(position).getLikes().size()  + 1 + " Likes");
+                    }
                 }
             }
         });
@@ -121,27 +139,37 @@ public class PostRecyclerAdapter extends RecyclerView.Adapter<PostRecyclerAdapte
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             view = itemView;
-            postImage = itemView.findViewById(R.id.image_post_detail);
             likesButton = itemView.findViewById(R.id.like_count_btn_post_detail);
         }
 
         @RequiresApi(api = Build.VERSION_CODES.O)
-        public void setPostInfos(Post post) {
+        public void setPostInfo(Post post) {
+
             userFullnameTextView = view.findViewById(R.id.user_full_name_post_detail);
             dateCreationTextView = view.findViewById(R.id.date_creation_post_detail);
             descriptionTextView = view.findViewById(R.id.description_post_detail);
             titleTextView = view.findViewById(R.id.title_post_detail);
             commentsButton = view.findViewById(R.id.comments_count_btn_post_detail);
-
+            postImage = view.findViewById(R.id.image_post_detail);
             if (post.getAccount() != null) {
                 userFullnameTextView.setText(post.getAccount().getUsername());
             }
             if (post.getCreatedDate() != null) {
 
-                dateCreationTextView.setText(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM).format(LocalDate.parse(post.getCreatedDate())));
+               //    dateCreationTextView.setText(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM).format(LocalDate.parse(post.getCreatedDate())));
             }
             if (post.getIsLiked()){
                 likesButton.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_like_pressed,0,0,0);
+            }
+            if(post.getPicture() != null){
+                RequestOptions reqOpt = RequestOptions
+                        .fitCenterTransform()
+                        .transform(new RoundedCorners(5))
+                        .override(postImage.getWidth() ,postImage.getHeight())
+                        .centerCrop(); // Overrides size of downloaded image and converts it's bitmaps to your desired image size;
+
+                Glide.with(this.view).load(post.getPicture()).apply(reqOpt).into(postImage);
+
             }
             commentsButton.setText(post.getComments().size()  + " Comments");
             descriptionTextView.setText(post.getDescription());

@@ -46,6 +46,8 @@ import retrofit2.Response;
 public class PostDetailsActivity extends AppCompatActivity {
 
 
+    private boolean alreadyLiked;
+
     private ImageView userPictureView, postImageView;
     private TextView usernameTextView, dateCreationTimeTextView, postTitleTextView, postDescriptionTextView;
     private ImageButton moreBtn;
@@ -121,14 +123,21 @@ public class PostDetailsActivity extends AppCompatActivity {
                     post.setIsLiked(false);
                     deleteLike(App.getSession().getUsername(), post.getId());
                     likeBtn.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_like, 0, 0, 0);
-                    likeBtn.setText(post.getLikes().size() + " Likes");
+                    if(alreadyLiked == true){
+                        likeBtn.setText(post.getLikes().size() - 1 +  " Likes");
+                    }else {
+                        likeBtn.setText(post.getLikes().size()  +  " Likes");
+                    }
 
-                } else {
-
+                } else{
                     post.setIsLiked(true);
                     createLike(post.getId());
                     likeBtn.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_like_pressed, 0, 0, 0);
-                    likeBtn.setText(post.getLikes().size() + 1 + " Likes");
+                    if(alreadyLiked == true){
+                        likeBtn.setText(post.getLikes().size()  +  " Likes");
+                    }else {
+                        likeBtn.setText(post.getLikes().size() + 1 +  " Likes");
+                    }
                 }
             }
 
@@ -149,6 +158,7 @@ public class PostDetailsActivity extends AppCompatActivity {
                     progressDoalog.dismiss();
                     post = response.body();
                     post.setIsLiked(isLiked(post));
+                    alreadyLiked = isLiked(post);
                     renderPost(post);
                     renderComments(post.getComments());
                 }
@@ -177,7 +187,7 @@ public class PostDetailsActivity extends AppCompatActivity {
 
                 Toast.makeText(getApplicationContext(), "Comment added to DataBase", Toast.LENGTH_LONG).show();
                 comment.setAccount(Account.builder().username(App.getSession().getUsername()).build());
-                comment.setCreatedDate(LocalDate.now().toString());
+//                comment.setCreatedDate(LocalDate.now().toString());
                 commentList.add(comment);
                 commentRecyclerAdapter.notifyDataSetChanged();
                 post.getComments().add(comment);
@@ -211,7 +221,7 @@ public class PostDetailsActivity extends AppCompatActivity {
             usernameTextView.setText(post.getAccount().getUsername());
         }
 
-        dateCreationTimeTextView.setText(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM).format(LocalDate.parse(post.getCreatedDate())));
+        //dateCreationTimeTextView.setText(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM).format(LocalDate.parse(post.getCreatedDate())));
         postTitleTextView.setText(post.getTitle());
         getSupportActionBar().setTitle(post.getTitle());
         postDescriptionTextView.setText(post.getDescription());
