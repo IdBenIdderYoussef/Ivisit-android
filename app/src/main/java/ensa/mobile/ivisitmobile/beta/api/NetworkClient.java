@@ -16,7 +16,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class NetworkClient {
 
-    public static final String BASE_URL = "http://192.168.1.5:8080";
+    public static final String BASE_URL = "http://192.168.122.1:8080";
     public static Retrofit retrofit;
     public Context context;
 
@@ -38,7 +38,14 @@ public class NetworkClient {
         public Response intercept(Chain chain) throws IOException {
 
             Session session = App.getSession();
-            Request newRequest  = chain.request().newBuilder()
+
+            Request request = chain.request();
+            if(request.url().encodedPath().equalsIgnoreCase("v1/accounts/register")
+                    || request.url().encodedPath().equalsIgnoreCase("v1/posts") )
+                return chain.proceed(request);
+
+            Request newRequest  = chain.request()
+                    .newBuilder()
                     .addHeader("Authorization", "Bearer " + session.getAccessToken())
                     .build();
             return chain.proceed(newRequest);
@@ -53,7 +60,6 @@ public class NetworkClient {
             retrofit = new Retrofit.Builder()
                     .baseUrl(BASE_URL)
                     .client(client)
-                    //This is the only mandatory call on Builder object.
                     .addConverterFactory(GsonConverterFactory.create()) // Convertor library used to convert response into POJO
                     .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                     .build();

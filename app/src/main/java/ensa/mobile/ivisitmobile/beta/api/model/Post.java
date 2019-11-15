@@ -40,12 +40,9 @@ public class Post {
     @Expose
     private List<Like> likes;
 
-    @SerializedName("city")
+    @SerializedName("address")
     @Expose
-    private String city;
-    @SerializedName("country")
-    @Expose
-    private String country;
+    private Address address;
     @SerializedName("comments")
     @Expose
     private List<Comment> comments;
@@ -57,5 +54,9 @@ public class Post {
     @Expose
     private String createdDate;
 
+
+    @SerializedName("reports")
+    @Expose
+    private List<Report> reports;
 
 }

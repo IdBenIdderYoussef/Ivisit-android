@@ -4,4 +4,20 @@
     <string name="account_item">account_item</string>
     <string name="cancel_item">cancel_item</string>
     <string name="crop_image_menu_crop">SELECT</string>
+    <string name="report_title">Please select a problem to continue</string>
+    <string name="sendReport">Send</string>
+    <string name="description">description ...</string>
+    <string name="report_list">Report List</string>
+    <string name="email">email</string>
+    <string name="first_name">first_name</string>
+    <string name="last_name">last_name</string>
+    <string name="password">Password</string>
+    <string name="logo">logo</string>
+    <string name="header">header</string>
+    <string name="pass">pass</string>
+    <string name="username">username</string>
+    <string name="register">Register</string>
+    <string name="you_don_t_have_an_account">you_don_t_have_an_account</string>
+    <string name="profilepic">profilepic</string>
+    <string name="update">update</string>
 </resources>

@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "61715868620-tdf37v7lk1ncmeqt5erl7jche85lvo43.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "ensa.mobile.ivisitmobile.beta",
+            "certificate_hash": "4961b4ba2ebf0223f958d7ec27b6329f28bff9a1"
+          }
+        },
+        {
           "client_id": "61715868620-sdhneari525s48j5ulk9vvmod11corgr.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

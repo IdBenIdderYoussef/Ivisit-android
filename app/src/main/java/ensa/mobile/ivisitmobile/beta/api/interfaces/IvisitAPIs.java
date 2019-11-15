@@ -7,6 +7,7 @@ import ensa.mobile.ivisitmobile.beta.api.model.Authorization;
 import ensa.mobile.ivisitmobile.beta.api.model.Comment;
 import ensa.mobile.ivisitmobile.beta.api.model.Like;
 import ensa.mobile.ivisitmobile.beta.api.model.Post;
+import ensa.mobile.ivisitmobile.beta.api.model.User;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
@@ -40,6 +41,16 @@ public interface IvisitAPIs {
 
     @POST("/v1/likes/{postId}")
     Call<Like> addLike(@Body Like like, @Path("postId") Long postId);
+
+    @POST("v1/accounts/register")
+    Call<Boolean> registerUser(@Body Account build);
+
+
+    @POST("v1/users/update")
+    Call<Boolean> update(@Body User.UserBuilder account);
+
+    @POST("v1/accounts/findByusername")
+    Call<Account> findAccountByusername(@Body String username);
 
 
 }

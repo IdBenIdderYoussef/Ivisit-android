@@ -33,6 +33,7 @@ import java.time.format.FormatStyle;
 import java.util.List;
 
 import ensa.mobile.ivisitmobile.beta.R;
+import ensa.mobile.ivisitmobile.beta.activity.AddReportActivity;
 import ensa.mobile.ivisitmobile.beta.activity.PostDetailsActivity;
 import ensa.mobile.ivisitmobile.beta.api.interfaces.LikeApi;
 import ensa.mobile.ivisitmobile.beta.api.interfaces.PostApi;
@@ -82,7 +83,7 @@ public class PostRecyclerAdapter extends RecyclerView.Adapter<PostRecyclerAdapte
     public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
 
 
-        holder.postImage.setImageDrawable (null);
+        holder.postImage.setImageDrawable(null);
         post = postList.get(position);
         holder.setPostInfo(post);
 
@@ -134,30 +135,30 @@ public class PostRecyclerAdapter extends RecyclerView.Adapter<PostRecyclerAdapte
         holder.moreBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showMoreOption(holder.moreBtn,postList.get(position));
+                showMoreOption(holder.moreBtn, postList.get(position));
             }
         });
 
 
     }
 
-    private void showMoreOption(ImageButton moreButton ,final Post postSelected) {
+    private void showMoreOption(ImageButton moreButton, final Post postSelected) {
 
         PopupMenu popupMenu = new PopupMenu(context, moreButton, Gravity.END);
-        if (postSelected.getAccount() != null && postSelected.getAccount().getUsername().equals(App.getSession().getUsername())){
-            popupMenu.getMenu().add(Menu.NONE,0,0,"Delete");
-        }else {
-            popupMenu.getMenu().add(Menu.NONE,1,0,"Report");
+        if (postSelected.getAccount() != null && postSelected.getAccount().getUsername().equals(App.getSession().getUsername())) {
+            popupMenu.getMenu().add(Menu.NONE, 0, 0, "Delete");
+        } else {
+            popupMenu.getMenu().add(Menu.NONE, 1, 0, "Report");
         }
         popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                if(item.getItemId() == 0){
-                    Toast.makeText(context,"Delete Button",Toast.LENGTH_LONG);
+                if (item.getItemId() == 0) {
+                    Toast.makeText(context, "Delete Button", Toast.LENGTH_LONG);
                     deletePost(postSelected);
                 }
-                if (item.getItemId() == 1){
-                    // Report Action
+                if (item.getItemId() == 1) {
+                    reportPost(postSelected);
                 }
                 return false;
             }
@@ -180,6 +181,7 @@ public class PostRecyclerAdapter extends RecyclerView.Adapter<PostRecyclerAdapte
         private TextView dateCreationTextView;
         private TextView descriptionTextView;
         private TextView titleTextView;
+        private TextView addressTextView;
         private ImageView postImage;
         private Button commentsButton;
         private Button likesButton;
@@ -191,6 +193,7 @@ public class PostRecyclerAdapter extends RecyclerView.Adapter<PostRecyclerAdapte
             likesButton = itemView.findViewById(R.id.like_count_btn_post_detail);
             moreBtn = itemView.findViewById(R.id.moreBtn_post_detail);
             postImage = view.findViewById(R.id.image_post_detail);
+
         }
 
         @RequiresApi(api = Build.VERSION_CODES.O)
@@ -201,7 +204,7 @@ public class PostRecyclerAdapter extends RecyclerView.Adapter<PostRecyclerAdapte
             descriptionTextView = view.findViewById(R.id.description_post_detail);
             titleTextView = view.findViewById(R.id.title_post_detail);
             commentsButton = view.findViewById(R.id.comments_count_btn_post_detail);
-
+            addressTextView = view.findViewById(R.id.address_creation_post_detail);
             if (post.getAccount() != null) {
                 userFullnameTextView.setText(post.getAccount().getUsername());
             }
@@ -209,6 +212,11 @@ public class PostRecyclerAdapter extends RecyclerView.Adapter<PostRecyclerAdapte
 
                 //    dateCreationTextView.setText(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM).format(LocalDate.parse(post.getCreatedDate())));
             }
+
+            if (post.getAddress() != null ){
+                addressTextView.setText(post.getAddress().getCity() + " " + post.getAddress().getCountry());
+            }
+
             if (post.getIsLiked()) {
                 likesButton.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_like_pressed, 0, 0, 0);
             }
@@ -276,13 +284,13 @@ public class PostRecyclerAdapter extends RecyclerView.Adapter<PostRecyclerAdapte
 
     }
 
-    public void deletePost(final Post post){
+    public void deletePost(final Post post) {
         Call<Void> call = postService.getApi().delete(post.getId());
 
         call.enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
-                Toast.makeText(context,"Post delete",Toast.LENGTH_LONG);
+                Toast.makeText(context, "Post delete", Toast.LENGTH_LONG);
                 postList.remove(post);
                 notifyDataSetChanged();
                 //postListView.setAdapter(postRecyclerAdapter);
@@ -291,10 +299,21 @@ public class PostRecyclerAdapter extends RecyclerView.Adapter<PostRecyclerAdapte
 
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
-                Toast.makeText(context,"delete Error",Toast.LENGTH_LONG);
+                Toast.makeText(context, "delete Error", Toast.LENGTH_LONG);
             }
         });
     }
 
+
+    public void reportPost(Post post) {
+
+        Activity activity = (Activity) context;
+        Intent intent = new Intent(context, AddReportActivity.class);
+        intent.putExtra("postID", post.getId());
+        context.startActivity(intent);
+        activity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+
+
+    }
 
 }

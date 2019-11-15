@@ -26,6 +26,7 @@ public class SessionManagement {
 
 
     public static final String KEY_USERNAME = "UserName";
+    public static final String KEY_ID = "id";
 
     public static final String KEY_access_token = "access_token";
     public static final String KEY_TOKEN_TYPE = "token_type";
@@ -44,12 +45,13 @@ public class SessionManagement {
     /**
      * Create login session
      */
-    public void createLoginSession(String username, String accesstoken/*, String tokentype, String masterid, String name, Integer access*/) {
+    public void createLoginSession(String username, String accesstoken , Long id/*, String tokentype, String masterid, String name, Integer access*/) {
         // Storing login value as TRUE
         editor.putBoolean(IS_LOGIN, true);
         editor.putString(KEY_USERNAME, username);
         // Storing name in pref
         editor.putString(KEY_access_token, accesstoken);
+        editor.putLong(KEY_ID , id);
 
         // Storing email in pref
         /*editor.putString(KEY_TOKEN_TYPE, tokentype);

@@ -5,12 +5,16 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.Gravity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -53,7 +57,7 @@ public class PostDetailsActivity extends AppCompatActivity {
     private boolean alreadyLiked;
 
     private ImageView userPictureView, postImageView;
-    private TextView usernameTextView, dateCreationTimeTextView, postTitleTextView, postDescriptionTextView;
+    private TextView usernameTextView, dateCreationTimeTextView, postTitleTextView, postDescriptionTextView, addressTextView;
     private ImageButton moreBtn;
     private Button likeBtn, commentBtn;
     private LinearLayout profileLayout;
@@ -96,6 +100,7 @@ public class PostDetailsActivity extends AppCompatActivity {
         dateCreationTimeTextView = findViewById(R.id.date_creation_post_detail);
         postTitleTextView = findViewById(R.id.title_post_detail);
         postDescriptionTextView = findViewById(R.id.description_post_detail);
+        addressTextView = findViewById(R.id.address_creation_post_detail);
 
         moreBtn = findViewById(R.id.moreBtn_post_detail);
         likeBtn = findViewById(R.id.like_count_btn_post_detail);
@@ -127,24 +132,32 @@ public class PostDetailsActivity extends AppCompatActivity {
                     post.setIsLiked(false);
                     deleteLike(App.getSession().getUsername(), post.getId());
                     likeBtn.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_like, 0, 0, 0);
-                    if(alreadyLiked == true){
-                        likeBtn.setText(post.getLikes().size() - 1 +  " Likes");
-                    }else {
-                        likeBtn.setText(post.getLikes().size()  +  " Likes");
+                    if (alreadyLiked == true) {
+                        likeBtn.setText(post.getLikes().size() - 1 + " Likes");
+                    } else {
+                        likeBtn.setText(post.getLikes().size() + " Likes");
                     }
 
-                } else{
+                } else {
                     post.setIsLiked(true);
                     createLike(post.getId());
                     likeBtn.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_like_pressed, 0, 0, 0);
-                    if(alreadyLiked == true){
-                        likeBtn.setText(post.getLikes().size()  +  " Likes");
-                    }else {
-                        likeBtn.setText(post.getLikes().size() + 1 +  " Likes");
+                    if (alreadyLiked == true) {
+                        likeBtn.setText(post.getLikes().size() + " Likes");
+                    } else {
+                        likeBtn.setText(post.getLikes().size() + 1 + " Likes");
                     }
                 }
             }
 
+        });
+
+
+        moreBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showMoreOption(moreBtn, post);
+            }
         });
 
     }
@@ -232,6 +245,9 @@ public class PostDetailsActivity extends AppCompatActivity {
         postDescriptionTextView.setText(post.getDescription());
         commentBtn.setText(post.getComments().size() + " Comments");
         likeBtn.setText(post.getLikes().size() + " Likes");
+        if (post.getAddress() != null) {
+            addressTextView.setText(post.getAddress().getCity() + " " + post.getAddress().getCountry());
+        }
         if (post.getIsLiked()) {
             likeBtn.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_like_pressed, 0, 0, 0);
         }
@@ -242,6 +258,53 @@ public class PostDetailsActivity extends AppCompatActivity {
                 .centerCrop(); // Overrides size of downloaded image and converts it's bitmaps to your desired image size;
 
         Glide.with(this).load(post.getPicture()).apply(reqOpt).into(postImageView);
+    }
+
+
+    private void showMoreOption(ImageButton moreButton, final Post postSelected) {
+
+        PopupMenu popupMenu = new PopupMenu(this.getBaseContext(), moreButton, Gravity.END);
+        if (postSelected.getAccount() != null && postSelected.getAccount().getUsername().equals(App.getSession().getUsername())) {
+            popupMenu.getMenu().add(Menu.NONE, 0, 0, "Delete");
+        } else {
+            popupMenu.getMenu().add(Menu.NONE, 1, 0, "Report");
+        }
+        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                if (item.getItemId() == 0) {
+
+                    deletePost(post);
+                }
+                if (item.getItemId() == 1) {
+                    //reportPost(postSelected);
+                }
+                return false;
+            }
+        });
+
+        popupMenu.show();
+
+    }
+
+
+    public void deletePost(final Post post) {
+        Call<Void> call = postService.getApi().delete(post.getId());
+
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+
+                Intent intent = new Intent(PostDetailsActivity.this ,MainActivity.class);
+                startActivity(intent);
+
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+
+            }
+        });
     }
 
     public void renderComments(List<Comment> comments) {

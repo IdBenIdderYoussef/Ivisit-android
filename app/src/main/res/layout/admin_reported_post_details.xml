@@ -1,45 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".activity.PostDetailsActivity">
-
-
-    <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/appbar"
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/post_detail_toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/colorPrimary"
-            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-
-        </androidx.appcompat.widget.Toolbar>
-    </com.google.android.material.appbar.AppBarLayout>
+        android:layout_height="match_parent"
+        tools:context=".activity.AdminReportedPostDetailsActivity">
 
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/add_comment_layout"
-        android:layout_below="@id/appbar"
-        >
+        android:layout_height="wrap_content">
 
-         <LinearLayout
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical">
+
+            <com.google.android.material.appbar.AppBarLayout
+                android:id="@+id/appbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <androidx.appcompat.widget.Toolbar
+                    android:id="@+id/post_reported_detail_toolbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/colorPrimary"
+                    android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                </androidx.appcompat.widget.Toolbar>
+            </com.google.android.material.appbar.AppBarLayout>
 
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
@@ -56,14 +52,14 @@
                     android:orientation="vertical">
 
                     <LinearLayout
-                        android:id="@+id/profile_layout"
+                        android:id="@+id/post_reported_profile_layout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical"
                         android:orientation="horizontal">
 
                         <de.hdodenhof.circleimageview.CircleImageView
-                            android:id="@+id/user_picture_post_detail"
+                            android:id="@+id/user_picture_post_reported_detail"
                             android:layout_width="50dp"
                             android:layout_height="50dp"
                             android:scaleType="centerCrop"
@@ -76,7 +72,7 @@
                             android:orientation="vertical">
 
                             <TextView
-                                android:id="@+id/user_full_name_post_detail"
+                                android:id="@+id/user_full_name_post_reported_detail"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="5dp"
@@ -85,17 +81,7 @@
                                 android:textSize="16sp" />
 
                             <TextView
-                                android:id="@+id/address_creation_post_detail"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginLeft="5dp"
-                                android:text="Marrakech Morocco"
-                                android:textColor="#494747"
-                                android:textSize="14sp" />
-
-
-                            <TextView
-                                android:id="@+id/date_creation_post_detail"
+                                android:id="@+id/date_creation_post_reported_detail"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="5dp"
@@ -105,7 +91,7 @@
                         </LinearLayout>
 
                         <ImageButton
-                            android:id="@+id/moreBtn_post_detail"
+                            android:id="@+id/moreBtn_post_reported_detail"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:background="#00000000"
@@ -114,7 +100,7 @@
                     </LinearLayout>
 
                     <TextView
-                        android:id="@+id/title_post_detail"
+                        android:id="@+id/title_post_reported_detail"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginVertical="10dp"
@@ -124,7 +110,7 @@
                         android:textStyle="bold" />
 
                     <TextView
-                        android:id="@+id/description_post_detail"
+                        android:id="@+id/description_post_reported_detail"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:fontFamily="sans-serif"
@@ -134,7 +120,7 @@
                         android:textStyle="normal" />
 
                     <ImageView
-                        android:id="@+id/image_post_detail"
+                        android:id="@+id/image_post_reported_detail"
                         android:layout_width="match_parent"
                         android:layout_height="250dp"
                         android:background="@color/WhiteColor"
@@ -151,7 +137,7 @@
                         android:orientation="horizontal">
 
                         <Button
-                            android:id="@+id/like_count_btn_post_detail"
+                            android:id="@+id/like_count_btn_post_reported_detail"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
@@ -163,7 +149,7 @@
                             android:textAllCaps="false" />
 
                         <Button
-                            android:id="@+id/comments_count_btn_post_detail"
+                            android:id="@+id/comments_count_btn_post_reported_detail"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
@@ -185,61 +171,21 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
+                android:background="#25180606"
                 android:padding="5dp"
-                android:text="Comments"
+                android:text="Reports"
+                android:textAlignment="center"
                 android:textColor="#2A2A2A"
-                android:textSize="16sp" />
+                android:textSize="24sp" />
 
-             <androidx.recyclerview.widget.RecyclerView
-                 android:id="@+id/comments_recycleciew"
-                 android:layout_width="match_parent"
-                 android:layout_height="wrap_content"
-                  />
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/reports_recycleciew"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                />
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 
-    <RelativeLayout
-        android:id="@+id/add_comment_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:background="@drawable/border_set"
-        android:padding="3dp">
-
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/user_add_comment_icon"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:src="@drawable/account_profile_picture" />
-
-        <EditText
-            android:id="@+id/add_comment_content"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_margin="1dp"
-            android:layout_marginRight="1dp"
-            android:layout_toStartOf="@+id/send_comment_btn"
-            android:layout_toLeftOf="@+id/send_comment_btn"
-            android:layout_toEndOf="@+id/user_add_comment_icon"
-            android:layout_toRightOf="@+id/user_add_comment_icon"
-            android:background="@color/WhiteColor"
-            android:hint="Enter comment..."
-            android:inputType="textCapSentences|textMultiLine"
-            android:padding="10dp" />
-
-        <ImageButton
-            android:id="@+id/send_comment_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:background="@color/WhiteColor"
-            android:src="@drawable/ic_send_comment"
-            android:onClick="createComment"/>
-
     </RelativeLayout>
 
-</RelativeLayout>

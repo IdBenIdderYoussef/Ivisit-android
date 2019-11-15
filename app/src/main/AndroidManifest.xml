@@ -19,6 +19,11 @@
         <activity android:name=".activity.LoginActivity"></activity>
         <activity android:name=".activity.PostDetailsActivity" />
         <activity android:name=".activity.AddPostStep2Activity" />
+        <activity android:name=".activity.AddReportActivity" />
+        <activity android:name=".activity.AdminReportedPostDetailsActivity"></activity>
+        <activity android:name=".activity.AdminReportListActivity" />
+        <activity android:name=".activity.RegisterActivity" />
+        <activity android:name=".activity.ProfileActivity" />
         <activity
             android:name=".activity.AddPostActivity"
             android:windowSoftInputMode="adjustResize" />

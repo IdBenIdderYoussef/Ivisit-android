@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#70FFFFFF"
+    android:orientation="vertical"
+    app:cardBackgroundColor="@color/WhiteColor"
+    app:contentPadding="2dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#41BBB5B5">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/user_report_icon"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginEnd="5dp"
+            android:layout_marginRight="5dp"
+            android:src="@drawable/account_profile_picture" />
+
+        <TextView
+            android:id="@+id/user_name_report"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="3dp"
+            android:layout_toRightOf="@id/user_report_icon"
+            android:text="Youssef Id Ben Idder"
+            android:textColor="#181818"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/date_creation_report"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/user_name_report"
+            android:layout_marginLeft="5dp"
+            android:layout_toRightOf="@+id/user_report_icon"
+            android:text="20 may,2019"
+            android:textColor="#919191"
+            android:textSize="11sp" />
+
+
+        <LinearLayout
+            android:id="@+id/reason_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/date_creation_report"
+            android:layout_marginTop="5dp"
+            android:layout_toEndOf="@id/user_report_icon"
+            android:orientation="horizontal">
+
+
+            <TextView
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_weight="0"
+                android:background="#11422B2B"
+                android:fontFamily="sans-serif-medium"
+                android:text="Reason        :"
+                android:textAllCaps="false"
+                android:textColor="#2A2A2A"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/report_reason"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="6dp"
+                android:layout_marginTop="5dp"
+                android:layout_weight="12"
+                android:text="Violence"
+                android:textAllCaps="false" />
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/reason_layout"
+            android:layout_marginTop="5dp"
+            android:layout_toEndOf="@id/user_report_icon"
+            android:orientation="horizontal">
+
+
+            <TextView
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_weight="0"
+                android:background="#11422B2B"
+                android:fontFamily="sans-serif-medium"
+                android:text="Description :"
+                android:textAllCaps="false"
+                android:textColor="#2A2A2A"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/report_desc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="6dp"
+                android:layout_marginTop="5dp"
+                android:layout_weight="12"
+                android:text="ce post contient des données incorrects ,il faut le supprimer le plutot possible !!"
+                android:textAllCaps="false" />
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+
+</androidx.cardview.widget.CardView>

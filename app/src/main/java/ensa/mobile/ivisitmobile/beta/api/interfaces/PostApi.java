@@ -22,7 +22,7 @@ public interface PostApi {
     Call<List<Post>> findAll();
 
     @POST(urlPrefix)
-    Call<Post> create(@Body Post post );
+    Call<Void> create(@Body Post post );
 
     @GET(urlPrefix+"{id}")
     Call<Post> get(@Path("id") Long id);

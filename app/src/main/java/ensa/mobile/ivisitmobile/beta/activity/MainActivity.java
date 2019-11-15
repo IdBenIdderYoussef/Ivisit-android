@@ -27,11 +27,6 @@ import ensa.mobile.ivisitmobile.beta.api.model.Like;
 import ensa.mobile.ivisitmobile.beta.api.model.Post;
 import ensa.mobile.ivisitmobile.beta.api.services.PostService;
 import ensa.mobile.ivisitmobile.beta.security.App;
-import io.reactivex.Single;
-import io.reactivex.SingleObserver;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.schedulers.Schedulers;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -75,18 +70,18 @@ public class MainActivity extends AppCompatActivity {
 
         renderPosts();
 
-
     }
 
     private void renderPosts() {
 
-        Call<List<Post>> call= postService.getApi().findAll();
+        Call<List<Post>> call = postService.getApi().findAll();
 
 
         call.enqueue(new Callback<List<Post>>() {
             @Override
             public void onResponse(Call<List<Post>> call, Response<List<Post>> response) {
                 if (response.body() != null) {
+                    System.out.println(response.body().get(0));
                     for (Post post : response.body()) {
                         progressDialog.dismiss();
                         post.setIsLiked(isLiked(post));
@@ -99,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<List<Post>> call, Throwable t) {
-                System.err.println("Error message : "+t.getMessage());
+                System.err.println("Error message : " + t.getMessage());
                 progressDialog.dismiss();
             }
         });
@@ -135,8 +130,20 @@ public class MainActivity extends AppCompatActivity {
         try {
             switch (item.getItemId()) {
                 case R.id.profile:
-                    Intent compteIntent = new Intent(MainActivity.this, LoginActivity.class);
-                    startActivity(compteIntent);
+                    if (App.getSession().getAccessToken().equals("")) {
+                        Intent compteIntent = new Intent(MainActivity.this, LoginActivity.class);
+                        startActivity(compteIntent);
+                        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                    } else {
+                        Intent compteIntent = new Intent(MainActivity.this, ProfileActivity.class);
+                        startActivity(compteIntent);
+                        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                    }
+
+                    break;
+                case R.id.reported_post_list:
+                    Intent ReportIntent = new Intent(MainActivity.this, AdminReportListActivity.class);
+                    startActivity(ReportIntent);
                     overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                     break;
             }
@@ -148,9 +155,14 @@ public class MainActivity extends AppCompatActivity {
 
     public void addPostBtnClick(View view) {
 
-        Intent newPostIntent = new Intent(MainActivity.this, AddPostActivity.class);
-        startActivity(newPostIntent);
-        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+        if (App.getSession().getAccessToken().equals("")) {
+            Intent newPostIntent = new Intent(MainActivity.this, LoginActivity.class);
+            startActivity(newPostIntent);
+        } else {
+            Intent newPostIntent = new Intent(MainActivity.this, AddPostActivity.class);
+            startActivity(newPostIntent);
+            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+        }
 
     }
 

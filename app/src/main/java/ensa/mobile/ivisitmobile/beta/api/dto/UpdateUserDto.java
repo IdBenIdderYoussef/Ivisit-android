@@ -1,4 +1,4 @@
-package ensa.mobile.ivisitmobile.beta.api.model;
+package ensa.mobile.ivisitmobile.beta.api.dto;
 
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -14,15 +14,13 @@ import lombok.Setter;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Account {
+public class UpdateUserDto {
 
     @JsonProperty("id")
     private Long id;
-    @JsonProperty("email")
-    private String email;
-    @JsonProperty("username")
-    private String username;
-    @JsonProperty("password")
-    private String password;
+    @JsonProperty("firstName")
+    private String firstName;
+    @JsonProperty("lastName")
+    private String lastName;
 
 }
