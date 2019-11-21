@@ -2,15 +2,19 @@ package ensa.mobile.ivisitmobile.beta.activity;
 
 import android.app.ProgressDialog;
 import android.content.ClipData;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -38,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
     private Toolbar mainToolbar;
     public static RecyclerView postListView;
     private List<Post> postList;
+    private List<Post> postListAll;
     public static PostRecyclerAdapter postRecyclerAdapter;
     private FloatingActionButton addPostBtn;
     ProgressDialog progressDialog;
@@ -47,6 +52,10 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+
+        System.out.println("ROLE ----------------------- :" + App.getSession().getRole());
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -56,6 +65,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         postList = new ArrayList<>();
+        postListAll = new ArrayList<>(postList);
         postListView = findViewById(R.id.post_list);
         postRecyclerAdapter = new PostRecyclerAdapter(this, postList);
         postListView.setLayoutManager(new LinearLayoutManager(this));
@@ -87,6 +97,7 @@ public class MainActivity extends AppCompatActivity {
                         post.setIsLiked(isLiked(post));
                         post.setIsAlreadyLiked(post.getIsLiked());
                         postList.add(post);
+                        postListAll.add(post);
                         postRecyclerAdapter.notifyDataSetChanged();
                     }
                 }
@@ -112,6 +123,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onRestart() {
         postList.removeAll(postList);
+        postListAll.removeAll(postListAll);
         postRecyclerAdapter = new PostRecyclerAdapter(this, postList);
         postListView.setLayoutManager(new LinearLayoutManager(this));
         postListView.setAdapter(postRecyclerAdapter);
@@ -119,9 +131,71 @@ public class MainActivity extends AppCompatActivity {
         super.onRestart();
     }
 
+
+    private void closeKeyboard(View view) {
+        if (view != null) {
+            InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main_menu, menu);
+        //aniss
+
+        if(App.getSession().getRole().equals("ROLE_ADMIN")){
+            getMenuInflater().inflate(R.menu.main_menu_admin, menu);
+
+        }else{
+            getMenuInflater().inflate(R.menu.main_menu, menu);
+        }
+
+        MenuItem item = menu.findItem(R.id.search);
+        SearchView searchView = (SearchView) item.getActionView();
+        searchView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(!hasFocus){
+                    closeKeyboard(v);
+                }
+            }
+        });
+
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String query) {
+                if (query.isEmpty()) {
+                    postList.clear();
+                    postList.addAll(postListAll);
+                } else {
+                    postList.clear();
+                    for (Post post : postListAll) {
+                        if (post.getTitle().toLowerCase().contains(query.toLowerCase())
+                                || post.getAddress().getCountry().toLowerCase().contains(query.toLowerCase())
+                                || post.getAddress().getCity().toLowerCase().contains(query.toLowerCase())) {
+                            postList.add(post);
+
+                        }
+                    }
+                    if (postList.size() == 0) {
+                        Toast.makeText(MainActivity.this, "we couldn't find anything for :" + query, Toast.LENGTH_SHORT).show();
+                    }
+                }
+                postRecyclerAdapter.notifyDataSetChanged();
+                //mabghatch tkhdem b interface filterable
+                //postRecyclerAdapter.getFilter().filter(query);
+                return false;
+            }
+        });
+        //aniss-fin
+
         return true;
     }
 

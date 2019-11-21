@@ -1,6 +1,7 @@
 package ensa.mobile.ivisitmobile.beta.activity;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
@@ -9,6 +10,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -19,6 +21,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -54,6 +57,8 @@ import ensa.mobile.ivisitmobile.beta.api.services.PostService;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
+import static ensa.mobile.ivisitmobile.beta.R.drawable.transparent_bg_bordered_button_disabled;
 
 public class AddPostStep2Activity extends AppCompatActivity {
 
@@ -96,15 +101,12 @@ public class AddPostStep2Activity extends AppCompatActivity {
         String descriptionText = addPostTitleEditText.getText().toString();
 
         if (descriptionText.equals("")) {
-            addPostBtn.setEnabled(false);
+            addPostBtn.setBackground(ContextCompat.getDrawable(this , transparent_bg_bordered_button_disabled));
         } else {
-            addPostBtn.setEnabled(true);
+            addPostBtn.setBackground(ContextCompat.getDrawable(this , R.drawable.transparent_bg_bordered_button));
         }
     }
 
-
-    String apiKey = "AIzaSyB9iHICb2cbkBHt7-4TpmCOt6QIOb5NuWI";
-    PlacesClient placesClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -135,29 +137,14 @@ public class AddPostStep2Activity extends AppCompatActivity {
 
         checkFieldsForEmptyValues();
 
-        /*if (!Places.isInitialized()) {
-            Places.initialize(getApplicationContext(), apiKey);
-        }
-
-        placesClient = Places.createClient(this);
-
-        final AutocompleteSupportFragment autocompleteSupportFragment =
-                (AutocompleteSupportFragment) getSupportFragmentManager().findFragmentById(R.id.location_text_view);
-
-        autocompleteSupportFragment.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.LAT_LNG));
-        autocompleteSupportFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+        addPostTitleEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
-            public void onPlaceSelected(@NonNull Place place) {
-                final LatLng latLng = place.getLatLng();
-
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(!hasFocus){
+                    closeKeyboard(v);
+                }
             }
-
-            @Override
-            public void onError(@NonNull Status status) {
-
-            }
-        });*/
-
+        });
 
         JSONParser parser = new JSONParser();
         AssetManager assetManager = getAssets();
@@ -204,13 +191,27 @@ public class AddPostStep2Activity extends AppCompatActivity {
 
 
 
+    private void closeKeyboard(View view) {
+        if (view != null) {
+            InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+
+    }
+
+
 
     public void addPost(View view) {
+
+        if(addPostTitleEditText.getText().toString() == null || addPostTitleEditText.getText().toString().equals("")){
+            Toast.makeText(this , "Please enter a description for your experience",Toast.LENGTH_SHORT).show();
+            return;
+        }
 
         UUID uuid = UUID.randomUUID();
         String randomString = uuid.toString();
         progressDialog = new ProgressDialog(AddPostStep2Activity.this);
-        progressDialog.setMessage("Loading....");
+        progressDialog.setMessage("Wait !");
         progressDialog.show();
 
         final StorageReference imagePath = storageReference.child("post_images").child(randomString + ".jpg");

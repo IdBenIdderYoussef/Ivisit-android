@@ -1,20 +1,26 @@
 package ensa.mobile.ivisitmobile.beta.activity;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,10 +34,13 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import ensa.mobile.ivisitmobile.beta.R;
@@ -47,6 +56,7 @@ import ensa.mobile.ivisitmobile.beta.api.services.CommentService;
 import ensa.mobile.ivisitmobile.beta.api.services.LikeService;
 import ensa.mobile.ivisitmobile.beta.api.services.PostService;
 import ensa.mobile.ivisitmobile.beta.security.App;
+import ensa.mobile.ivisitmobile.beta.utils.Utils;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -55,6 +65,8 @@ public class PostDetailsActivity extends AppCompatActivity {
 
 
     private boolean alreadyLiked;
+
+    private RelativeLayout commentRelativeLayout;
 
     private ImageView userPictureView, postImageView;
     private TextView usernameTextView, dateCreationTimeTextView, postTitleTextView, postDescriptionTextView, addressTextView;
@@ -77,6 +89,8 @@ public class PostDetailsActivity extends AppCompatActivity {
     private PostService postService;
     private CommentService commentService;
     private LikeService likeService;
+
+    private LinearLayoutManager linearLayoutManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,37 +129,52 @@ public class PostDetailsActivity extends AppCompatActivity {
         commentList = new ArrayList<>();
         commentListView = findViewById(R.id.comments_recycleciew);
         commentRecyclerAdapter = new CommentRecyclerAdapter(this, commentList);
-        commentListView.setLayoutManager(new LinearLayoutManager(this));
+        linearLayoutManager = new LinearLayoutManager((this));
+        linearLayoutManager.setStackFromEnd(true);
+        commentListView.setLayoutManager(linearLayoutManager);
         commentListView.setAdapter(commentRecyclerAdapter);
 
         progressDoalog = new ProgressDialog(PostDetailsActivity.this);
         progressDoalog.setMessage("Loading....");
         progressDoalog.show();
 
+
+        commentRelativeLayout = findViewById(R.id.add_comment_layout);
+
+        if (App.getSession().getAccessToken() == null || App.getSession().getAccessToken().equals("")) {
+            commentRelativeLayout.setVisibility(View.GONE);
+            moreBtn.setVisibility(View.GONE);
+        }
+
         getPost();
 
         likeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (post.getIsLiked()) {
 
-                    post.setIsLiked(false);
-                    deleteLike(App.getSession().getUsername(), post.getId());
-                    likeBtn.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_like, 0, 0, 0);
-                    if (alreadyLiked == true) {
-                        likeBtn.setText(post.getLikes().size() - 1 + " Likes");
-                    } else {
-                        likeBtn.setText(post.getLikes().size() + " Likes");
-                    }
-
+                if (App.getSession().getAccessToken() == null || App.getSession().getAccessToken().equals("")) {
+                    showAlertDialogButtonClicked();
                 } else {
-                    post.setIsLiked(true);
-                    createLike(post.getId());
-                    likeBtn.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_like_pressed, 0, 0, 0);
-                    if (alreadyLiked == true) {
-                        likeBtn.setText(post.getLikes().size() + " Likes");
+                    if (post.getIsLiked()) {
+
+                        post.setIsLiked(false);
+                        deleteLike(App.getSession().getUsername(), post.getId());
+                        likeBtn.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_like, 0, 0, 0);
+                        if (alreadyLiked == true) {
+                            likeBtn.setText(post.getLikes().size() - 1 + " Likes");
+                        } else {
+                            likeBtn.setText(post.getLikes().size() + " Likes");
+                        }
+
                     } else {
-                        likeBtn.setText(post.getLikes().size() + 1 + " Likes");
+                        post.setIsLiked(true);
+                        createLike(post.getId());
+                        likeBtn.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_like_pressed, 0, 0, 0);
+                        if (alreadyLiked == true) {
+                            likeBtn.setText(post.getLikes().size() + " Likes");
+                        } else {
+                            likeBtn.setText(post.getLikes().size() + 1 + " Likes");
+                        }
                     }
                 }
             }
@@ -163,10 +192,31 @@ public class PostDetailsActivity extends AppCompatActivity {
     }
 
 
+    public void showAlertDialogButtonClicked() {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Alert");
+        builder.setMessage("You have to sign in fo like or comment !");
+        builder.setPositiveButton("Sign in", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Intent intent = new Intent(PostDetailsActivity.this, LoginActivity.class);
+                startActivity(intent);
+
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+            }
+        });
+        builder.setNegativeButton("Cancel", null);
+        AlertDialog dialog = builder.create();
+        dialog.show();
+
+    }
+
+
     public void getPost() {
 
         Call<Post> call = postService.getApi().get(getIntent().getLongExtra("postID", 0));
-
+        System.out.println("Post Id :" + getIntent().getLongExtra("postID", 0));
         call.enqueue(new Callback<Post>() {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
@@ -202,26 +252,34 @@ public class PostDetailsActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
 
-                Toast.makeText(getApplicationContext(), "Comment added to DataBase", Toast.LENGTH_LONG).show();
                 comment.setAccount(Account.builder().username(App.getSession().getUsername()).build());
-//                comment.setCreatedDate(LocalDate.now().toString());
+                comment.setCreatedDate(LocalDate.now().toString());
                 commentList.add(comment);
                 commentRecyclerAdapter.notifyDataSetChanged();
                 post.getComments().add(comment);
                 commentBtn.setText(post.getComments().size() + " Comments");
-
+                commentContentEditText.setText("");
+                closeKeyboard();
+                commentContentEditText.clearFocus();
 
             }
 
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
                 System.out.println(t.getMessage());
-                Toast.makeText(getApplicationContext(), "Something wrong happened", Toast.LENGTH_LONG).show();
-
 
             }
         });
 
+    }
+
+    private void closeKeyboard() {
+
+        View view = this.getCurrentFocus();
+        if (view != null) {
+            InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
     }
 
 
@@ -237,9 +295,21 @@ public class PostDetailsActivity extends AppCompatActivity {
 
         if (post.getAccount() != null) {
             usernameTextView.setText(post.getAccount().getUsername());
+
         }
 
-        //dateCreationTimeTextView.setText(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM).format(LocalDate.parse(post.getCreatedDate())));
+        if (post.getCreatedDate() != null) {
+            SimpleDateFormat parser = new SimpleDateFormat("yyyy-MM-dd");
+            SimpleDateFormat formatter = new SimpleDateFormat("dd MMMM yyyy");
+            Date parsed = null;
+            try {
+                parsed = parser.parse(post.getCreatedDate());
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            dateCreationTimeTextView.setText(formatter.format(parsed));
+        }
+
         postTitleTextView.setText(post.getTitle());
         getSupportActionBar().setTitle(post.getTitle());
         postDescriptionTextView.setText(post.getDescription());
@@ -277,7 +347,7 @@ public class PostDetailsActivity extends AppCompatActivity {
                     deletePost(post);
                 }
                 if (item.getItemId() == 1) {
-                    //reportPost(postSelected);
+                    reportPost(postSelected);
                 }
                 return false;
             }
@@ -295,7 +365,7 @@ public class PostDetailsActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
 
-                Intent intent = new Intent(PostDetailsActivity.this ,MainActivity.class);
+                Intent intent = new Intent(PostDetailsActivity.this, MainActivity.class);
                 startActivity(intent);
 
             }
@@ -331,14 +401,14 @@ public class PostDetailsActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<Like> call, Response<Like> response) {
                 if (response.body() != null) {
-                    Toast.makeText(getApplicationContext(), "Like added to DataBase", Toast.LENGTH_LONG).show();
+
                 }
             }
 
             @Override
             public void onFailure(Call<Like> call, Throwable t) {
                 System.out.println(t.getMessage());
-                Toast.makeText(getApplicationContext(), "Something wrong happened", Toast.LENGTH_LONG).show();
+
             }
         });
 
@@ -353,16 +423,25 @@ public class PostDetailsActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
                 if (response.body() != null) {
-                    Toast.makeText(getApplicationContext(), "Like deleted from DataBase", Toast.LENGTH_LONG).show();
+
                 }
             }
 
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
                 System.out.println(t.getMessage());
-                Toast.makeText(getApplicationContext(), "Something wrong happened", Toast.LENGTH_LONG).show();
             }
         });
+
+    }
+
+    public void reportPost(Post post) {
+
+        Intent intent = new Intent(this, AddReportActivity.class);
+        intent.putExtra("postID", post.getId());
+        startActivity(intent);
+        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+
 
     }
 

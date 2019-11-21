@@ -5,6 +5,8 @@
     android:id="@+id/add_post_step2"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:clickable="true"
+    android:focusableInTouchMode="true"
     tools:context=".activity.AddPostStep2Activity">
 
     <com.google.android.material.appbar.AppBarLayout
@@ -88,7 +90,10 @@
         android:layout_marginStart="12dp"
         android:layout_marginTop="20dp"
         app:layout_constraintStart_toEndOf="@+id/country_text_view"
-        app:layout_constraintTop_toBottomOf="@+id/add_post_title_edit_text" />
+        app:layout_constraintTop_toBottomOf="@+id/add_post_title_edit_text"
+        app:layout_constraintLeft_toRightOf="@+id/country_text_view"
+        app:layout_constraintBaseline_toBaselineOf="@+id/country_text_view"
+        />
 
     <Spinner
         android:id="@+id/spinnerCity"
@@ -97,7 +102,9 @@
         android:layout_marginStart="40dp"
         android:layout_marginTop="16dp"
         app:layout_constraintStart_toEndOf="@+id/city_text_view"
-        app:layout_constraintTop_toBottomOf="@+id/spinnerCountry" />
+        app:layout_constraintTop_toBottomOf="@+id/spinnerCountry"
+        app:layout_constraintLeft_toRightOf="@+id/city_text_view"
+        app:layout_constraintBaseline_toBaselineOf="@+id/city_text_view"/>
 
     <Button
         android:id="@+id/add_post_btn"
@@ -109,7 +116,7 @@
         android:background="@drawable/transparent_bg_bordered_button"
         android:onClick="addPost"
         android:text="Share"
-        android:textColor="@color/colorAccent"
+        android:textColor="@color/transparent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/spinnerCity" />
 

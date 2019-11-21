@@ -4,6 +4,7 @@ import androidx.annotation.Nullable;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -16,6 +17,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 
 import com.theartofdev.edmodo.cropper.CropImage;
@@ -25,6 +27,8 @@ import java.io.IOException;
 
 import ensa.mobile.ivisitmobile.beta.R;
 
+import static ensa.mobile.ivisitmobile.beta.R.drawable.transparent_bg_bordered_button_disabled;
+
 public class AddPostActivity extends AppCompatActivity {
 
     Toolbar addPostToolbar;
@@ -33,6 +37,8 @@ public class AddPostActivity extends AppCompatActivity {
     private Uri imageUri = null;
     private EditText descriptionEditText;
     private Button toNextStepButton;
+    private boolean isDescriptionFilled = false;
+    private boolean isImageFilled = false;
 
 
     private TextWatcher textWatcher = new TextWatcher() {
@@ -56,9 +62,12 @@ public class AddPostActivity extends AppCompatActivity {
         String descriptionText = descriptionEditText.getText().toString();
 
         if (descriptionText.equals("")) {
-            toNextStepButton.setEnabled(false);
+            toNextStepButton.setBackground(ContextCompat.getDrawable(this , transparent_bg_bordered_button_disabled));
         } else {
-            toNextStepButton.setEnabled(true);
+            isDescriptionFilled = true;
+            if(isImageFilled){
+                toNextStepButton.setBackground(ContextCompat.getDrawable(this , R.drawable.transparent_bg_bordered_button));
+            }
         }
     }
 
@@ -86,6 +95,11 @@ public class AddPostActivity extends AppCompatActivity {
 
     public void toNextSteep(View view) {
 
+        if(isDescriptionFilled == false || isImageFilled == false){
+            Toast.makeText(this , "Please pick an image and enter a description for your experience to continue",Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         Intent nextSteepIntent = new Intent(AddPostActivity.this, AddPostStep2Activity.class);
         nextSteepIntent.putExtra("text_description", descriptionEditText.getText().toString());
         nextSteepIntent.putExtra("image_uri", imageUri.toString());
@@ -108,7 +122,10 @@ public class AddPostActivity extends AppCompatActivity {
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
             if (resultCode == RESULT_OK) {
                 imageUri = result.getUri();
-                System.out.println(imageUri);
+                isImageFilled = true;
+                if(isDescriptionFilled){
+                    toNextStepButton.setBackground(ContextCompat.getDrawable(this , R.drawable.transparent_bg_bordered_button));
+                }
 
                 postImageSelected.setImageURI(imageUri);
 

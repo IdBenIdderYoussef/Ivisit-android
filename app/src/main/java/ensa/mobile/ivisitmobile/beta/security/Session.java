@@ -18,5 +18,6 @@ public class Session {
     private Long id;
     private String username;
     private String accessToken;
+    private String role;
 
 }

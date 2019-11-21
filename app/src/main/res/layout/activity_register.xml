@@ -6,30 +6,55 @@
     android:background="@color/WhiteColor"
     tools:ignore="LabelFor">
 
+    <TextView
+        android:id="@+id/textView_usename"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:textColor="#222121"
+        app:layout_constraintBottom_toTopOf="@+id/textView5"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.056"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/username_register"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <TextView
+        android:id="@+id/textView_pass"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:textColor="#E91E63"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.056"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/password_register" />
+
     <Button
         android:id="@+id/register_register"
         android:layout_width="350dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
+        android:layout_marginTop="48dp"
         android:background="@color/colorPrimary"
         android:backgroundTint="@color/colorPrimary"
-        android:text="@string/register"
         android:inputType=""
+        android:text="@string/register"
         android:textColor="@color/WhiteColor"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.491"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/password_register" />
+        app:layout_constraintTop_toBottomOf="@+id/password_register"
+        app:layout_constraintVertical_bias="0.125" />
 
     <TextView
         android:id="@+id/textView4"
         android:layout_width="wrap_content"
         android:layout_height="19dp"
-        android:layout_marginTop="9dp"
+        android:layout_marginTop="40dp"
         android:text="@string/username"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.042"
+        app:layout_constraintHorizontal_bias="0.057"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/email_register" />
 
@@ -37,10 +62,13 @@
         android:id="@+id/username_register"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
         android:layout_marginTop="8dp"
+        android:layout_marginEnd="10dp"
         android:autofillHints=""
         android:ems="10"
         android:inputType="text"
+        android:textColor="#141414"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -51,7 +79,9 @@
         android:id="@+id/password_register"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
         android:layout_marginTop="8dp"
+        android:layout_marginEnd="10dp"
         android:autofillHints=""
         android:ems="10"
         android:inputType="textPassword"
@@ -64,7 +94,7 @@
         android:id="@+id/textView5"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="44dp"
         android:text="@string/password"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.045"
@@ -98,26 +128,40 @@
         android:id="@+id/email_register"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
         android:layout_marginTop="7dp"
+        android:layout_marginEnd="10dp"
         android:ems="10"
+        android:importantForAutofill="no"
         android:inputType="textEmailAddress"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editText4"
-        android:importantForAutofill="no" />
+        app:layout_constraintTop_toBottomOf="@+id/editText4" />
 
     <TextView
         android:id="@+id/editText4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="68dp"
+        android:layout_marginTop="44dp"
         android:layout_marginEnd="390dp"
         android:text="@string/email"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.068"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView4" />
+
+    <TextView
+        android:id="@+id/textView_email"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#E91E63"
+        app:layout_constraintBottom_toTopOf="@+id/textView4"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.055"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/email_register"
+        app:layout_constraintVertical_bias="0.428" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

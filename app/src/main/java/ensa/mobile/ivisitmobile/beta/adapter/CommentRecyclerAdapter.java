@@ -12,9 +12,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
+import java.util.Date;
 import java.util.List;
 
 import ensa.mobile.ivisitmobile.beta.R;
@@ -77,6 +80,15 @@ public class CommentRecyclerAdapter extends RecyclerView.Adapter<CommentRecycler
                 usernameComment.setText(comment.getAccount().getUsername());
             }
 //            dateCreationComment.setText(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM).format(LocalDate.parse(comment.getCreatedDate())));
+            SimpleDateFormat parser = new SimpleDateFormat("yyyy-MM-dd");
+            SimpleDateFormat formatter = new SimpleDateFormat("dd MMM yyyy");
+            Date parsed = null;
+            try {
+                parsed = parser.parse(comment.getCreatedDate());
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            dateCreationComment.setText(formatter.format(parsed));
             commentContent = view.findViewById(R.id.comment_content);
             commentContent.setText(comment.getContent());
         }

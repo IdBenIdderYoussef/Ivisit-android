@@ -1,7 +1,9 @@
 package ensa.mobile.ivisitmobile.beta.adapter;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.view.Gravity;
@@ -27,13 +29,18 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
 import com.squareup.picasso.Picasso;
 
+import java.text.Format;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
+import java.util.Date;
 import java.util.List;
 
 import ensa.mobile.ivisitmobile.beta.R;
 import ensa.mobile.ivisitmobile.beta.activity.AddReportActivity;
+import ensa.mobile.ivisitmobile.beta.activity.LoginActivity;
 import ensa.mobile.ivisitmobile.beta.activity.PostDetailsActivity;
 import ensa.mobile.ivisitmobile.beta.api.interfaces.LikeApi;
 import ensa.mobile.ivisitmobile.beta.api.interfaces.PostApi;
@@ -78,6 +85,38 @@ public class PostRecyclerAdapter extends RecyclerView.Adapter<PostRecyclerAdapte
         return new ViewHolder(view);
     }
 
+    public void showAlertDialogButtonClicked() {
+        // setup the alert builder
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle("Alert");
+        builder.setMessage("You have to sign in fo like or comment !");
+        // add the buttons
+        builder.setPositiveButton("Sign in", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Activity activity = (Activity) context;
+                Intent intent = new Intent(context, LoginActivity.class);
+                context.startActivity(intent);
+
+                activity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+            }
+        });
+        builder.setNegativeButton("Cancel", null);
+        // create and show the alert dialog
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+
+    public void showPostDetail(Post post) {
+        Activity activity = (Activity) context;
+        Intent intent = new Intent(context, PostDetailsActivity.class);
+        intent.putExtra("postID", post.getId());
+        context.startActivity(intent);
+
+        activity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+    }
+
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
@@ -91,41 +130,67 @@ public class PostRecyclerAdapter extends RecyclerView.Adapter<PostRecyclerAdapte
         holder.postImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Activity activity = (Activity) context;
-                Intent intent = new Intent(context, PostDetailsActivity.class);
-                intent.putExtra("postID", postList.get(position).getId());
-                context.startActivity(intent);
+                post = postList.get(position);
+                showPostDetail(post);
+            }
+        });
 
-                activity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+        holder.commentsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                post = postList.get(position);
+                showPostDetail(post);
+            }
+        });
+
+        holder.descriptionTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                post = postList.get(position);
+                showPostDetail(post);
+            }
+        });
+
+        holder.titleTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                post = postList.get(position);
+                showPostDetail(post);
             }
         });
 
 
         holder.likesButton.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View v) {
 
-                System.out.println(postList.get(position).getIsLiked());
-                if (postList.get(position).getIsLiked()) {
 
-                    postList.get(position).setIsLiked(false);
-                    deleteLike(App.getSession().getUsername(), postList.get(position).getId());
-                    holder.likesButton.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_like, 0, 0, 0);
-                    if (postList.get(position).getIsAlreadyLiked() == true) {
-                        holder.likesButton.setText(postList.get(position).getLikes().size() - 1 + " Likes");
-                    } else {
-                        holder.likesButton.setText(postList.get(position).getLikes().size() + " Likes");
-                    }
-
+                if (App.getSession().getAccessToken() == null || App.getSession().getAccessToken().equals("")) {
+                    showAlertDialogButtonClicked();
                 } else {
+                    System.out.println(postList.get(position).getIsLiked());
+                    if (postList.get(position).getIsLiked()) {
 
-                    postList.get(position).setIsLiked(true);
-                    createLike(postList.get(position).getId());
-                    holder.likesButton.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_like_pressed, 0, 0, 0);
-                    if (postList.get(position).getIsAlreadyLiked() == true) {
-                        holder.likesButton.setText(postList.get(position).getLikes().size() + " Likes");
+                        postList.get(position).setIsLiked(false);
+                        deleteLike(App.getSession().getUsername(), postList.get(position).getId());
+                        holder.likesButton.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_like, 0, 0, 0);
+                        if (postList.get(position).getIsAlreadyLiked() == true) {
+                            holder.likesButton.setText(postList.get(position).getLikes().size() - 1 + " Likes");
+                        } else {
+                            holder.likesButton.setText(postList.get(position).getLikes().size() + " Likes");
+                        }
+
                     } else {
-                        holder.likesButton.setText(postList.get(position).getLikes().size() + 1 + " Likes");
+
+                        postList.get(position).setIsLiked(true);
+                        createLike(postList.get(position).getId());
+                        holder.likesButton.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_like_pressed, 0, 0, 0);
+                        if (postList.get(position).getIsAlreadyLiked() == true) {
+                            holder.likesButton.setText(postList.get(position).getLikes().size() + " Likes");
+                        } else {
+                            holder.likesButton.setText(postList.get(position).getLikes().size() + 1 + " Likes");
+                        }
                     }
                 }
             }
@@ -197,7 +262,7 @@ public class PostRecyclerAdapter extends RecyclerView.Adapter<PostRecyclerAdapte
         }
 
         @RequiresApi(api = Build.VERSION_CODES.O)
-        public void setPostInfo(Post post) {
+        public void setPostInfo(Post post)  {
 
             userFullnameTextView = view.findViewById(R.id.user_full_name_post_detail);
             dateCreationTextView = view.findViewById(R.id.date_creation_post_detail);
@@ -209,12 +274,24 @@ public class PostRecyclerAdapter extends RecyclerView.Adapter<PostRecyclerAdapte
                 userFullnameTextView.setText(post.getAccount().getUsername());
             }
             if (post.getCreatedDate() != null) {
+                SimpleDateFormat parser = new SimpleDateFormat("yyyy-MM-dd");
+                SimpleDateFormat formatter = new SimpleDateFormat("dd MMMM yyyy");
+                Date parsed = null;
+                try {
+                    parsed = parser.parse(post.getCreatedDate());
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                dateCreationTextView.setText(formatter.format(parsed));
 
-                //    dateCreationTextView.setText(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM).format(LocalDate.parse(post.getCreatedDate())));
             }
 
-            if (post.getAddress() != null ){
+            if (post.getAddress() != null) {
                 addressTextView.setText(post.getAddress().getCity() + " " + post.getAddress().getCountry());
+            }
+
+            if (App.getSession().getAccessToken() == null || App.getSession().getAccessToken().equals("")) {
+                moreBtn.setVisibility(View.GONE);
             }
 
             if (post.getIsLiked()) {
@@ -248,7 +325,6 @@ public class PostRecyclerAdapter extends RecyclerView.Adapter<PostRecyclerAdapte
             @Override
             public void onResponse(Call<Like> call, Response<Like> response) {
                 if (response.body() != null) {
-                    Toast.makeText(context, "Like added to DataBase", Toast.LENGTH_LONG).show();
 
                 }
             }
@@ -256,7 +332,6 @@ public class PostRecyclerAdapter extends RecyclerView.Adapter<PostRecyclerAdapte
             @Override
             public void onFailure(Call<Like> call, Throwable t) {
                 System.out.println(t.getMessage());
-                Toast.makeText(context, "Something wrong happened", Toast.LENGTH_LONG).show();
             }
         });
 
@@ -271,14 +346,14 @@ public class PostRecyclerAdapter extends RecyclerView.Adapter<PostRecyclerAdapte
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
                 if (response.body() != null) {
-                    Toast.makeText(context, "Like deleted from DataBase", Toast.LENGTH_LONG).show();
+
                 }
             }
 
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
                 System.out.println(t.getMessage());
-                Toast.makeText(context, "Something wrong happened", Toast.LENGTH_LONG).show();
+
             }
         });
 

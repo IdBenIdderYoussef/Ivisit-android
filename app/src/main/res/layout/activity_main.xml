@@ -5,7 +5,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".activity.MainActivity"
-    android:background="@color/Background_color">
+    android:background="@color/Background_color"
+    android:clickable="true"
+    android:focusableInTouchMode="true">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/main_toolbar"

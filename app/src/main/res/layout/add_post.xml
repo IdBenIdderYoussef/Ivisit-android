@@ -127,7 +127,7 @@
             android:background="@drawable/transparent_bg_bordered_button"
             android:onClick="toNextSteep"
             android:text="Next"
-            android:textColor="@color/colorAccent"
+            android:textColor="@color/transparent"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"/>
     </RelativeLayout>

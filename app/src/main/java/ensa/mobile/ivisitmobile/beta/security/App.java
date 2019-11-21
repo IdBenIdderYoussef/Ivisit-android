@@ -17,6 +17,7 @@ import static ensa.mobile.ivisitmobile.beta.security.SecurityConstants.KEY_acces
 import static ensa.mobile.ivisitmobile.beta.security.SecurityConstants.PREF_NAME;
 import static ensa.mobile.ivisitmobile.beta.security.SecurityConstants.PRIVATE_MODE;
 import static ensa.mobile.ivisitmobile.beta.security.SessionManagement.KEY_ID;
+import static ensa.mobile.ivisitmobile.beta.security.SessionManagement.KEY_ROLE;
 
 public class App extends Application {
     private static App instance;
@@ -40,8 +41,9 @@ public class App extends Application {
         sharedPref = App.getContext().getSharedPreferences( PREF_NAME,PRIVATE_MODE);
         String token = sharedPref.getString(KEY_access_token,"");
         String username = sharedPref.getString(KEY_USERNAME,"");
+        String role = sharedPref.getString(KEY_ROLE,"");
         Long id = sharedPref.getLong(KEY_ID , 0);
-        return Session.builder().accessToken(token).username(username).id(id).build();
+        return Session.builder().accessToken(token).username(username).id(id).role(role).build();
     }
 
 }

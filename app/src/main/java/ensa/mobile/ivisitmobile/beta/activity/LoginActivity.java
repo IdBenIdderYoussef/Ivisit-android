@@ -2,6 +2,8 @@ package ensa.mobile.ivisitmobile.beta.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -15,11 +17,14 @@ import ensa.mobile.ivisitmobile.beta.api.interfaces.IvisitAPIs;
 import ensa.mobile.ivisitmobile.beta.api.NetworkClient;
 import ensa.mobile.ivisitmobile.beta.api.model.Account;
 import ensa.mobile.ivisitmobile.beta.api.model.Authorization;
+import ensa.mobile.ivisitmobile.beta.api.model.Post;
 import ensa.mobile.ivisitmobile.beta.security.SessionManagement;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
+import retrofit2.http.GET;
+import retrofit2.http.Path;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -60,15 +65,44 @@ public class LoginActivity extends AppCompatActivity {
                         /*This is the success callback. Though the response type is JSON, with Retrofit we get the response in the form of WResponse POJO class
                          */
                         if (response.body() != null) {
-                            System.out.println(response.body().getUser().getUsername());
-                            System.out.println(response.body().getToken());
                             SessionManagement session = new SessionManagement(LoginActivity.this);
-                            System.out.println("id : ----------------------------------- " + response.body().getUser().getId());
-                            session.createLoginSession(response.body().getUser().getUsername(), response.body().getToken(), response.body().getUser().getId());
+                            session.createLoginSession(response.body().getUser().getUsername(),
+                                    response.body().getToken(), response.body().getUser().getId(),
+                                    response.body().getUser().getRoles().get(0));
                             username = response.body().getUser().getUsername();
                             token = response.body().getToken();
                             Intent compteIntent = new Intent(LoginActivity.this, MainActivity.class);
                             startActivity(compteIntent);
+                        }
+                        else {
+                            AlertDialog.Builder builder;
+                            builder = new AlertDialog.Builder(LoginActivity.this);
+                            builder.setTitle("Erreur");
+                            builder.setMessage("Le username ou le mot de passe est incorrecte");
+
+                            // Set click listener for alert dialog buttons
+                            DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    switch(which){
+                                        case DialogInterface.BUTTON_POSITIVE:
+                                            // User clicked the Yes button
+                                            break;
+
+                                        case DialogInterface.BUTTON_NEGATIVE:
+                                            // User clicked the No button
+                                            break;
+                                    }
+                                }
+                            };
+
+                            builder.setPositiveButton("Ok", dialogClickListener);
+
+
+
+                            AlertDialog dialog = builder.create();
+                            // Display the alert dialog on interface
+                            dialog.show();
                         }
 
                     }
@@ -95,6 +129,5 @@ public class LoginActivity extends AppCompatActivity {
         });
 
     }
-
 
 }

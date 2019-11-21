@@ -12,12 +12,13 @@
         android:layout_height="wrap_content">
 
         <de.hdodenhof.circleimageview.CircleImageView
+            android:layout_marginTop="3dp"
             android:id="@+id/user_comment_icon"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_marginEnd="5dp"
             android:layout_marginRight="5dp"
-            android:src="@drawable/account_profile_picture"/>
+            android:src="@drawable/account_profile_picture" />
 
         <TextView
             android:id="@+id/user_name_comment"
@@ -38,7 +39,7 @@
             android:layout_below="@+id/user_name_comment"
             android:layout_marginLeft="5dp"
             android:layout_toRightOf="@+id/user_comment_icon"
-            android:text="20 may,2019"
+            android:text="20 may, 2019"
             android:textColor="#919191"
             android:textSize="11sp" />
 
@@ -51,7 +52,8 @@
             android:layout_toEndOf="@id/user_comment_icon"
             android:text="Cette place est incroyable !!"
             android:textColor="#2A2A2A"
-            android:textSize="14sp" />
+            android:textSize="14sp"
+            android:layout_marginBottom="8dp"/>
 
 
     </RelativeLayout>
