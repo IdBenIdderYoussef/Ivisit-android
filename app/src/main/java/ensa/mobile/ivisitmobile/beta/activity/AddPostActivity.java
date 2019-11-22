@@ -17,6 +17,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 
@@ -26,6 +27,7 @@ import com.theartofdev.edmodo.cropper.CropImageView;
 import java.io.IOException;
 
 import ensa.mobile.ivisitmobile.beta.R;
+import ensa.mobile.ivisitmobile.beta.security.App;
 
 import static ensa.mobile.ivisitmobile.beta.R.drawable.transparent_bg_bordered_button_disabled;
 
@@ -34,6 +36,7 @@ public class AddPostActivity extends AppCompatActivity {
     Toolbar addPostToolbar;
     private ImageView selectImageBtn;
     private ImageView postImageSelected;
+    private TextView userTextView;
     private Uri imageUri = null;
     private EditText descriptionEditText;
     private Button toNextStepButton;
@@ -86,7 +89,8 @@ public class AddPostActivity extends AppCompatActivity {
         toNextStepButton = findViewById(R.id.to_next_step_btn);
         selectImageBtn = findViewById(R.id.selec_image_post);
         postImageSelected = findViewById(R.id.post_image_selected);
-
+        userTextView = findViewById(R.id.add_post_username);
+        userTextView.setText(App.getSession().getUsername());
         descriptionEditText.addTextChangedListener(textWatcher);
 
         checkFieldsForEmptyValues();

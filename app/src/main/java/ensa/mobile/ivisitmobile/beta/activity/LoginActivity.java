@@ -77,8 +77,8 @@ public class LoginActivity extends AppCompatActivity {
                         else {
                             AlertDialog.Builder builder;
                             builder = new AlertDialog.Builder(LoginActivity.this);
-                            builder.setTitle("Erreur");
-                            builder.setMessage("Le username ou le mot de passe est incorrecte");
+                            builder.setTitle("Error");
+                            builder.setMessage("The username or password is incorrect");
 
                             // Set click listener for alert dialog buttons
                             DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {

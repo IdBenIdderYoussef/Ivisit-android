@@ -1,12 +1,18 @@
 package ensa.mobile.ivisitmobile.beta.activity;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.Gravity;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import androidx.annotation.RequiresApi;
@@ -14,6 +20,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
+import com.bumptech.glide.request.RequestOptions;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +38,7 @@ import ensa.mobile.ivisitmobile.beta.api.model.Report;
 import ensa.mobile.ivisitmobile.beta.api.services.CommentService;
 import ensa.mobile.ivisitmobile.beta.api.services.LikeService;
 import ensa.mobile.ivisitmobile.beta.api.services.PostService;
+import ensa.mobile.ivisitmobile.beta.security.App;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -37,7 +48,7 @@ public class AdminReportedPostDetailsActivity extends AppCompatActivity {
     private ImageView userPictureView, postImageView;
     private TextView usernameTextView, dateCreationTimeTextView, postTitleTextView, postDescriptionTextView;
     private ImageButton moreBtn;
-    private Button likeBtn, commentBtn;
+    private Button likeBtn, commentBtn ;
     private LinearLayout profileLayout;
 
     private ReportRecyclerAdapter reportRecyclerAdapter;
@@ -94,6 +105,14 @@ public class AdminReportedPostDetailsActivity extends AppCompatActivity {
 
         getPost();
 
+
+        moreBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showMoreOption(moreBtn, post);
+            }
+        });
+
     }
 
     public void getPost() {
@@ -136,6 +155,13 @@ public class AdminReportedPostDetailsActivity extends AppCompatActivity {
         postDescriptionTextView.setText(post.getDescription());
         commentBtn.setText(post.getComments().size() + " Comments");
         likeBtn.setText(post.getLikes().size() + " Likes");
+        RequestOptions reqOpt = RequestOptions
+                .fitCenterTransform()
+                .transform(new RoundedCorners(5))
+                .override(postImageView.getWidth(), postImageView.getHeight())
+                .centerCrop(); // Overrides size of downloaded image and converts it's bitmaps to your desired image size;
+
+        Glide.with(this).load(post.getPicture()).apply(reqOpt).into(postImageView);
         /*if (post.getIsLiked()) {
             likeBtn.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_like_pressed, 0, 0, 0);
         }*/
@@ -154,4 +180,45 @@ public class AdminReportedPostDetailsActivity extends AppCompatActivity {
             reportRecyclerAdapter.notifyDataSetChanged();
         }
     }
+
+    private void showMoreOption(ImageButton moreButton, final Post postSelected) {
+
+        PopupMenu popupMenu = new PopupMenu(this.getBaseContext(), moreButton, Gravity.END);
+        if (postSelected.getAccount() != null && postSelected.getAccount().getUsername().equals(App.getSession().getUsername())) {
+            popupMenu.getMenu().add(Menu.NONE, 0, 0, "Delete");
+        }
+        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                if (item.getItemId() == 0) {
+
+                    deletePost(post);
+                }
+                return false;
+            }
+        });
+
+        popupMenu.show();
+
+    }
+
+    public void deletePost(final Post post) {
+        Call<Void> call = postService.getApi().delete(post.getId());
+
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+
+                Intent intent = new Intent(AdminReportedPostDetailsActivity.this, AdminReportListActivity.class);
+                startActivity(intent);
+
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+
+            }
+        });
+    }
+
 }

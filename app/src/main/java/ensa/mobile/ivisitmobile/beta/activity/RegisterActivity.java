@@ -68,12 +68,14 @@ public class RegisterActivity extends AppCompatActivity {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
 
                 if(Validator.isValidEmail(s.toString())){
-                    view_email.setText("this email is valid");
                     view_email.setTextColor(Color.GREEN);
+                    view_email.setText("this email is valid");
 
                 }
-                else view_email.setText("this email is not valid");
-                view_email.setTextColor(Color.RED);
+                else
+                {view_email.setTextColor(Color.RED);
+                    view_email.setText("this email is not valid");
+                }
 
                 valider=false;
             }
@@ -107,15 +109,16 @@ public class RegisterActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(Call<Account> call, Response<Account> response) {
                         if (response.body() == null) {
+                            view_username.setTextColor(Color.GREEN);
 
                             view_username.setText("this username is valid");
-                            view_username.setTextColor(Color.GREEN);
 
 
                         }
                         else {
-                            view_username.setText("this username already taken");
                             view_username.setTextColor(Color.RED);
+
+                            view_username.setText("this username already taken");
                         }
 
                     }
@@ -151,9 +154,11 @@ public class RegisterActivity extends AppCompatActivity {
                     view_pass.setText("this password is valid");
                     view_pass.setTextColor(Color.GREEN);
                 }
-                else view_pass.setText("Password must contain min 6 characters");
-                view_pass.setTextColor(Color.RED);
+                else {
+                    view_pass.setTextColor(Color.RED);
 
+                    view_pass.setText("Password must contain min 6 characters");
+                }
             }
 
             @Override
@@ -169,7 +174,7 @@ public class RegisterActivity extends AppCompatActivity {
 
 
 
-                if(Validator.isValidEmail(email_register.getText().toString()) && Validator.isValidPassword(password_register.getText().toString()) &&  view_username.getText().toString().equals("Ce username est valide")){
+                if(Validator.isValidEmail(email_register.getText().toString()) && Validator.isValidPassword(password_register.getText().toString()) &&  view_username.getText().toString().equals("this username is valid")){
 
                     Retrofit retrofit = NetworkClient.getRetrofitClient();
                     IvisitAPIs ivisitAPIs = retrofit.create(IvisitAPIs.class);
@@ -238,7 +243,3 @@ public class RegisterActivity extends AppCompatActivity {
 
     }
 }
-
-
-
-

@@ -91,7 +91,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<List<Post>> call, Response<List<Post>> response) {
                 if (response.body() != null) {
-                    System.out.println(response.body().get(0));
                     for (Post post : response.body()) {
                         progressDialog.dismiss();
                         post.setIsLiked(isLiked(post));

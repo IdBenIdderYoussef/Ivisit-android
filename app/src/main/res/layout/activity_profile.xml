@@ -43,7 +43,7 @@
 
     <EditText
         android:id="@+id/firstname_profile"
-        android:layout_width="413dp"
+        android:layout_width="match_parent"
         android:layout_height="52dp"
         android:layout_marginTop="12dp"
         android:ems="10"
@@ -65,7 +65,7 @@
 
     <EditText
         android:id="@+id/lastname_profile"
-        android:layout_width="413dp"
+        android:layout_width="match_parent"
         android:layout_height="52dp"
         android:layout_marginTop="12dp"
         android:ems="10"

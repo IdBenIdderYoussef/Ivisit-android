@@ -7,6 +7,7 @@
     <string name="report_title">Please select a problem to continue</string>
     <string name="sendReport">Report</string>
     <string name="description">description ...</string>
+    <string name="common_signin">Sign in</string>
     <string name="report_list">Report List</string>
     <string name="email">Email</string>
     <string name="first_name">First name</string>

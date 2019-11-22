@@ -40,6 +40,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -244,6 +245,10 @@ public class PostDetailsActivity extends AppCompatActivity {
 
     public void createComment(final View view) {
 
+        if(commentContentEditText.getText() == null || commentContentEditText.getText().toString().equals("")){
+            return;
+        }
+
         final Comment comment = Comment.builder().content(commentContentEditText.getText().toString()).build();
         Call<Void> call = commentService.getApi().create(comment, post.getId());
 
@@ -253,7 +258,12 @@ public class PostDetailsActivity extends AppCompatActivity {
             public void onResponse(Call<Void> call, Response<Void> response) {
 
                 comment.setAccount(Account.builder().username(App.getSession().getUsername()).build());
-                comment.setCreatedDate(LocalDate.now().toString());
+                Date c = Calendar.getInstance().getTime();
+                System.out.println("Current time => " + c);
+                SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+                String formattedDate = df.format(c);
+                System.out.println("Date ------------------- : " + formattedDate);
+                comment.setCreatedDate(formattedDate);
                 commentList.add(comment);
                 commentRecyclerAdapter.notifyDataSetChanged();
                 post.getComments().add(comment);
