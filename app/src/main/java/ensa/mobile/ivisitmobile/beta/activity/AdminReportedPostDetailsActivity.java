@@ -25,7 +25,10 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import ensa.mobile.ivisitmobile.beta.R;
@@ -46,7 +49,7 @@ import retrofit2.Response;
 public class AdminReportedPostDetailsActivity extends AppCompatActivity {
 
     private ImageView userPictureView, postImageView;
-    private TextView usernameTextView, dateCreationTimeTextView, postTitleTextView, postDescriptionTextView;
+    private TextView usernameTextView, dateCreationTimeTextView, postTitleTextView, postDescriptionTextView , addressTextView;
     private ImageButton moreBtn;
     private Button likeBtn, commentBtn ;
     private LinearLayout profileLayout;
@@ -82,13 +85,14 @@ public class AdminReportedPostDetailsActivity extends AppCompatActivity {
         postImageView = findViewById(R.id.image_post_reported_detail);
 
         usernameTextView = findViewById(R.id.user_full_name_post_reported_detail);
-        dateCreationTimeTextView = findViewById(R.id.date_creation_post_reported_detail);
+        dateCreationTimeTextView = findViewById(R.id.date_creation_post_detail);
         postTitleTextView = findViewById(R.id.title_post_reported_detail);
         postDescriptionTextView = findViewById(R.id.description_post_reported_detail);
 
         moreBtn = findViewById(R.id.moreBtn_post_reported_detail);
         likeBtn = findViewById(R.id.like_count_btn_post_reported_detail);
         commentBtn = findViewById(R.id.comments_count_btn_post_reported_detail);
+        addressTextView = findViewById(R.id.address_creation_post_detail);
 
         profileLayout = findViewById(R.id.post_reported_profile_layout);
 
@@ -162,6 +166,20 @@ public class AdminReportedPostDetailsActivity extends AppCompatActivity {
                 .centerCrop(); // Overrides size of downloaded image and converts it's bitmaps to your desired image size;
 
         Glide.with(this).load(post.getPicture()).apply(reqOpt).into(postImageView);
+
+        if (post.getCreatedDate() != null) {
+            SimpleDateFormat parser = new SimpleDateFormat("yyyy-MM-dd");
+            SimpleDateFormat formatter = new SimpleDateFormat("dd MMMM yyyy");
+            Date parsed = null;
+            try {
+                parsed = parser.parse(post.getCreatedDate());
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            dateCreationTimeTextView.setText(formatter.format(parsed));
+            System.out.println(post.getAddress().getCity());
+            addressTextView.setText(post.getAddress().getCity() + " " + post.getAddress().getCountry());
+        }
         /*if (post.getIsLiked()) {
             likeBtn.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_like_pressed, 0, 0, 0);
         }*/
@@ -183,15 +201,15 @@ public class AdminReportedPostDetailsActivity extends AppCompatActivity {
 
     private void showMoreOption(ImageButton moreButton, final Post postSelected) {
 
+
         PopupMenu popupMenu = new PopupMenu(this.getBaseContext(), moreButton, Gravity.END);
-        if (postSelected.getAccount() != null && postSelected.getAccount().getUsername().equals(App.getSession().getUsername())) {
+        if (postSelected.getAccount() != null){
             popupMenu.getMenu().add(Menu.NONE, 0, 0, "Delete");
         }
         popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 if (item.getItemId() == 0) {
-
                     deletePost(post);
                 }
                 return false;

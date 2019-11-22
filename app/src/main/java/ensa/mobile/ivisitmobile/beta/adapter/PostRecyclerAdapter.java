@@ -219,8 +219,22 @@ public class PostRecyclerAdapter extends RecyclerView.Adapter<PostRecyclerAdapte
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 if (item.getItemId() == 0) {
-                    Toast.makeText(context, "Delete Button", Toast.LENGTH_LONG);
-                    deletePost(postSelected);
+                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                    builder.setTitle("Delete post");
+                    builder.setMessage("Are you sure you wanna delete this post ?");
+                    // add the buttons
+                    builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            deletePost(postSelected);
+                        }
+                    });
+                    builder.setNegativeButton("No", null);
+                    // create and show the alert dialog
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
+
+
                 }
                 if (item.getItemId() == 1) {
                     reportPost(postSelected);

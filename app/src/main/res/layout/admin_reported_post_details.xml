@@ -81,7 +81,17 @@
                                 android:textSize="16sp" />
 
                             <TextView
-                                android:id="@+id/date_creation_post_reported_detail"
+                                android:id="@+id/address_creation_post_detail"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="5dp"
+                                android:text="Marrakech Morocco"
+                                android:textColor="#494747"
+                                android:textSize="14sp" />
+
+
+                            <TextView
+                                android:id="@+id/date_creation_post_detail"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="5dp"
