@@ -14,6 +14,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import ensa.mobile.ivisitmobile.beta.R;
@@ -99,6 +102,17 @@ public class PostReportedRecyclerAdapter extends RecyclerView.Adapter<PostReport
             if (post.getCreatedDate() != null) {
 
                 //           dateCreationTextView.setText(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM).format(LocalDate.parse(post.getCreatedDate())));
+                if (post.getCreatedDate() != null) {
+                    SimpleDateFormat parser = new SimpleDateFormat("yyyy-MM-dd");
+                    SimpleDateFormat formatter = new SimpleDateFormat("dd MMMM yyyy");
+                    Date parsed = null;
+                    try {
+                        parsed = parser.parse(post.getCreatedDate());
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                    dateCreationTextView.setText(formatter.format(parsed));
+                }
             }
             titleTextView.setText(post.getTitle());
             nbrReports.setText(post.getReports().size()  + " Reports");

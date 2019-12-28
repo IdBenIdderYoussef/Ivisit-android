@@ -49,9 +49,9 @@ import retrofit2.Response;
 public class AdminReportedPostDetailsActivity extends AppCompatActivity {
 
     private ImageView userPictureView, postImageView;
-    private TextView usernameTextView, dateCreationTimeTextView, postTitleTextView, postDescriptionTextView , addressTextView;
+    private TextView usernameTextView, dateCreationTimeTextView, postTitleTextView, postDescriptionTextView, addressTextView;
     private ImageButton moreBtn;
-    private Button likeBtn, commentBtn ;
+    private Button likeBtn, commentBtn;
     private LinearLayout profileLayout;
 
     private ReportRecyclerAdapter reportRecyclerAdapter;
@@ -203,9 +203,9 @@ public class AdminReportedPostDetailsActivity extends AppCompatActivity {
 
 
         PopupMenu popupMenu = new PopupMenu(this.getBaseContext(), moreButton, Gravity.END);
-        if (postSelected.getAccount() != null){
-            popupMenu.getMenu().add(Menu.NONE, 0, 0, "Delete");
-        }
+
+        popupMenu.getMenu().add(Menu.NONE, 0, 0, "Delete");
+
         popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {

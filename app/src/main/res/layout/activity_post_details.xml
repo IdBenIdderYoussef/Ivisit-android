@@ -82,7 +82,6 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="5dp"
-                                android:text="Youssef Id Ben Idder"
                                 android:textColor="#181818"
                                 android:textSize="16sp" />
 
@@ -91,7 +90,6 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="5dp"
-                                android:text="Marrakech Morocco"
                                 android:textColor="#494747"
                                 android:textSize="14sp" />
 
@@ -101,7 +99,6 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="5dp"
-                                android:text="20 may 2019"
                                 android:textColor="#919191"
                                 android:textSize="12sp" />
                         </LinearLayout>
@@ -120,7 +117,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginVertical="10dp"
-                        android:text="Place jemaa el fna Marrakech"
                         android:textColor="#4E91C2"
                         android:textSize="16sp"
                         android:textStyle="bold" />
@@ -129,9 +125,8 @@
                         android:id="@+id/description_post_detail"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:fontFamily="sans-serif"
                         android:layout_marginBottom="5dp"
-                        android:text="un peu trop de touristes et de vendeurs à la sauvette... ne faites PAS de tatouages au hénné : il est souvent coupé à l'eau et lorsque vous passerez le sois-disant tatouage sous l'eau, tout ou presque disparaitra !"
+                        android:fontFamily="sans-serif"
                         android:textColor="#2A2A2A"
                         android:textSize="14sp"
                         android:textStyle="normal" />
@@ -141,7 +136,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="250dp"
                         android:background="@color/WhiteColor"
-                        android:src="@drawable/jamee_elafana" />
+                         />
 
                     <View
                         android:layout_width="match_parent"

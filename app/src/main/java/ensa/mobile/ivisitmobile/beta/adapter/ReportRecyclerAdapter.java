@@ -12,9 +12,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
+import java.util.Date;
 import java.util.List;
 
 import ensa.mobile.ivisitmobile.beta.R;
@@ -81,7 +84,17 @@ public class ReportRecyclerAdapter extends RecyclerView.Adapter<ReportRecyclerAd
             reportReason.setText(report.getReason());
             reportDesc = view.findViewById(R.id.report_desc);
             reportDesc.setText(report.getDescription());
-
+            if (report.getCreatedDate() != null) {
+                SimpleDateFormat parser = new SimpleDateFormat("yyyy-MM-dd");
+                SimpleDateFormat formatter = new SimpleDateFormat("dd MMMM yyyy");
+                Date parsed = null;
+                try {
+                    parsed = parser.parse(report.getCreatedDate());
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                dateCreationReport.setText(formatter.format(parsed));
+            }
         }
 
     }

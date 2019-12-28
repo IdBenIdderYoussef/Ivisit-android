@@ -35,11 +35,11 @@
           "client_type": 3
         }
       ],
-      "api_key": [
+      /*"api_key": [
         {
           "current_key": "AIzaSyBtKEiEdrkJ4s3a_Ospv3_NLI-Z-2Rr0N4"
         }
-      ],
+      ],*/
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
